@@ -12,6 +12,7 @@ import (
 type testRequest struct {
 	req        Request
 	physicalID string
+	data       map[string]string
 	err        error // Simulated error
 	resp       string
 	respErr    error // Expected error
@@ -20,7 +21,7 @@ type testRequest struct {
 // Test common Send scenarios.
 func TestRespond(t *testing.T) {
 	// Create response channel.
-	resp := make(chan string, 5) // Update this line to correspond with the number of tests.
+	resp := make(chan string, 4) // Update this line to correspond with the number of tests.
 	// Create httptest server.
 	srv := httptest.NewServer(handler(resp, t))
 
@@ -38,7 +39,8 @@ func TestRespond(t *testing.T) {
 				ResourceProperties: []byte(`{"data1":"new"}`),
 			},
 			physicalID: "testId1",
-			resp:       `{"Status":"SUCCESS","PhysicalResourceId":"testId1","StackId":"stack1","RequestId":"1234","LogicalResourceId":"resource1","Data":{"data1":"new"}}`,
+			data:       map[string]string{"key1": "value1"},
+			resp:       `{"Status":"SUCCESS","PhysicalResourceId":"testId1","StackId":"stack1","RequestId":"1234","LogicalResourceId":"resource1","Data":{"key1":"value1"}}`,
 		},
 		// Update test request.
 		testRequest{
@@ -53,7 +55,7 @@ func TestRespond(t *testing.T) {
 				OldResourceProperties: []byte(`{"data1":"old"}`),
 			},
 			physicalID: "testId2",
-			resp:       `{"Status":"SUCCESS","PhysicalResourceId":"testId2","StackId":"stack2","RequestId":"4321","LogicalResourceId":"resource2","Data":{"data1":"updated"}}`,
+			resp:       `{"Status":"SUCCESS","PhysicalResourceId":"testId2","StackId":"stack2","RequestId":"4321","LogicalResourceId":"resource2"}`,
 		},
 		// Delete test request.
 		testRequest{
@@ -81,8 +83,9 @@ func TestRespond(t *testing.T) {
 				ResourceProperties: []byte(`{"data1":"wrong data"}`),
 			},
 			physicalID: "testId4",
+			data:       map[string]string{"key1": "value1"},
 			err:        fmt.Errorf("Couldn't create the resource. Resource with same physical id already exists"),
-			resp:       `{"Status":"FAILED","Reason":"Couldn't create the resource. Resource with same physical id already exists","PhysicalResourceId":"testId4","StackId":"stack4","RequestId":"2222","LogicalResourceId":"resource4","Data":{"data1":"wrong data"}}`,
+			resp:       `{"Status":"FAILED","Reason":"Couldn't create the resource. Resource with same physical id already exists","PhysicalResourceId":"testId4","StackId":"stack4","RequestId":"2222","LogicalResourceId":"resource4"}`,
 		},
 		// Request where the ResponseURL is missing.
 		testRequest{
@@ -99,20 +102,13 @@ func TestRespond(t *testing.T) {
 			resp:       "",
 			respErr:    fmt.Errorf("Pre-signed S3 url can't be empty"),
 		},
-		// Request with malformed JSON.
-		testRequest{
-			req: Request{
-				ResourceProperties: []byte(`{{{{{`),
-			},
-			respErr: fmt.Errorf("Couldn't JSON Marshal the Response. Error json: error calling MarshalJSON for type json.RawMessage: invalid character '{' looking for beginning of object key string"),
-		},
 	}
 
 	// Loop over all tests.
-	for _, test := range tests {
-		if err := test.req.Send(test.physicalID, test.err); err != nil {
+	for i, test := range tests {
+		if err := test.req.Send(test.physicalID, test.data, test.err); err != nil {
 			if err.Error() != test.respErr.Error() {
-				t.Errorf("%s", err.Error())
+				t.Errorf("Test number: %d failed. Wanted %s but got %s", i+1, test.respErr, err.Error())
 			}
 			continue
 		}
@@ -120,7 +116,7 @@ func TestRespond(t *testing.T) {
 		// Check that we got the same response.
 		val := <-resp
 		if val != test.resp {
-			t.Errorf("Expected %s but got %s", test.resp, val)
+			t.Errorf("Test number: %d failed. Wanted %s but got %s", i+1, test.resp, val)
 		}
 	}
 }
