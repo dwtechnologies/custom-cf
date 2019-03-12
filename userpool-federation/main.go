@@ -29,13 +29,13 @@ type config struct {
 	svc *cognitoidentityprovider.CognitoIdentityProvider
 
 	physicalID string // The physical ID to use for the resource.
-	resourceProperties    *identityProvider // The new resource data from the template.
-	oldResourceProperties *identityProvider // The old resource data, only on updates.
+	resourceProperties    *IdentityProvider // The new resource data from the template.
+	oldResourceProperties *IdentityProvider // The old resource data, only on updates.
 }
 
-// identityProvider valid ProviderTypes are
+// IdentityProvider valid ProviderTypes are
 // SAML, Facebook, Google, LoginWithAmazon or OIDC
-type identityProvider struct {
+type IdentityProvider struct {
 	IdpIdentifiers   []string          `json:"-"`
 	ProviderName     string            `json:"ProviderName"`
 	ProviderType     string            `json:"ProviderType"`
@@ -175,8 +175,8 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 
 // getIdentityProviderByName will get the identity provider with providerName on User Pool
 // with poolID. If nil is returned no identity provider by that name was found.
-// Return *identityProvider and error.
-func (c *config) getIdentityProviderByName(poolID string, providerName string) (*identityProvider, error) {
+// Return *IdentityProvider and error.
+func (c *config) getIdentityProviderByName(poolID string, providerName string) (*IdentityProvider, error) {
 	// Validate input.
 	switch {
 	case poolID == "":
@@ -200,7 +200,7 @@ func (c *config) getIdentityProviderByName(poolID string, providerName string) (
 		return nil, err
 	}
 
-	return &identityProvider{
+	return &IdentityProvider{
 		IdpIdentifiers:   resp.IdentityProvider.IdpIdentifiers,
 		ProviderName:     *resp.IdentityProvider.ProviderName,
 		ProviderType:     string(resp.IdentityProvider.ProviderType),
