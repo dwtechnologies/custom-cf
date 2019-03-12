@@ -3,15 +3,12 @@ Transform: "AWS::Serverless-2016-10-31"
 Description: "Cognito CloudFormation Federation, App Client Settings support"
 
 Parameters:
-
   Environment:
     Description: "Environment"
     Type: "String"
     Default: "dev"
 
-
 Resources:
-
   FederationLambda:
     Type: "AWS::Serverless::Function"
     DependsOn:
@@ -22,7 +19,7 @@ Resources:
       Role: !GetAtt "FederationRole.Arn"
       Handler: "handler"
       Runtime: "go1.x"
-      CodeUri: "../build/federation/handler.zip"
+      CodeUri: "../build/userpool-federation/handler.zip"
       Environment:
         Variables:
           ENVIRONMENT: !Ref "Environment"
@@ -44,9 +41,9 @@ Resources:
               Service: "lambda.amazonaws.com"
       Policies:
         - PolicyName: "cognito"
-          PolicyDocument: 
+          PolicyDocument:
             Version: "2012-10-17"
-            Statement: 
+            Statement:
               - Effect: "Allow"
                 Action:
                   - "cognito-idp:UpdateUserPoolClient"
@@ -57,6 +54,6 @@ Resources:
 
   FederationLogGroup:
     Type: "AWS::Logs::LogGroup"
-    Properties: 
+    Properties:
       LogGroupName: !Sub "/aws/lambda/cognito-cf-federation-${AWS::Region}-${Environment}"
       RetentionInDays: 90
