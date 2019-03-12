@@ -41,7 +41,7 @@ func main() {
     lambda.Start(handler)
 }
 
-func handler(ctx context.Context, req *respond.Request) error {
+func handler(ctx context.Context, req *events.Request) error {
     // Unmarshal ResourceProperties and OldResourceProperties.
     new, old := &events{}, &events{}
     if err := req.Unmarshal(new, old); err != nil {
