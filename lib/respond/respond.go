@@ -71,12 +71,17 @@ func (req *Request) createResponse(physicalID string, data map[string]string, re
 		RequestID:          req.RequestID,
 		PhysicalResourceID: physicalID,
 		LogicalResourceID:  req.LogicalResourceID,
-		Data:               data,
 	}
 
-	if respErr != nil {
+	// Set Reason only if we got a resource create error.
+	// And only set data if resource creation was successfull.
+	switch {
+	case respErr != nil:
 		resp.Status = "FAILED"
 		resp.Reason = respErr.Error()
+
+	default:
+		resp.Data = data
 	}
 
 	b, err := json.Marshal(resp)
