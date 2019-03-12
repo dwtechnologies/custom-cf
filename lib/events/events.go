@@ -21,7 +21,8 @@ type Request struct {
 	RequestID             string          `json:"RequestId"`
 	ResourceType          string          `json:"ResourceType"`
 	LogicalResourceID     string          `json:"LogicalResourceId"`
-	ResourceProperties    json.RawMessage `json:"ResourceProperties"`
+	PhysicalResourceID    string          `json:"PhysicalResourceId,omitempty"`
+	ResourceProperties    json.RawMessage `json:"ResourceProperties,omitempty"`
 	OldResourceProperties json.RawMessage `json:"OldResourceProperties,omitempty"`
 }
 
