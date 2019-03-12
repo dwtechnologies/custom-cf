@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Description: "Cognito CloudFormation Federation, App Client Settings support"
+
+Parameters:
+
+  Environment:
+    Description: "Environment"
+    Type: "String"
+    Default: "dev"
+
+
+Resources:
+
+  FederationLambda:
+    Type: "AWS::Serverless::Function"
+    DependsOn:
+      - "FederationRole"
+    Properties:
+      FunctionName: !Sub "cognito-cf-federation-${AWS::Region}-${Environment}"
+      Description: !Sub "cognito-cf-federation-${AWS::Region}-${Environment}"
+      Role: !GetAtt "FederationRole.Arn"
+      Handler: "handler"
+      Runtime: "go1.x"
+      CodeUri: "../build/federation/handler.zip"
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref "Environment"
+      Timeout: 60
+      MemorySize: 128
+
+  FederationRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: !Sub "cognito-cf-federation-role-${AWS::Region}-${Environment}"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action: "sts:AssumeRole"
+            Principal:
+              Service: "lambda.amazonaws.com"
+      Policies:
+        - PolicyName: "cognito"
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - Effect: "Allow"
+                Action:
+                  - "cognito-idp:UpdateUserPoolClient"
+                  - "cognito-idp:DescribeIdentityProvider"
+                  - "cognito-idp:UpdateIdentityProvider"
+                  - "cognito-idp:CreateIdentityProvider"
+                Resource: !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/*"
+
+  FederationLogGroup:
+    Type: "AWS::Logs::LogGroup"
+    Properties: 
+      LogGroupName: !Sub "/aws/lambda/cognito-cf-federation-${AWS::Region}-${Environment}"
+      RetentionInDays: 90
