@@ -6,13 +6,13 @@ life easier.
 
 ## libs
 
-### lib/respond
+### lib/events
 
 Is used for parsing incoming Request to the lambda as well as creating the Response and sending it
 to the s3 pre-signed URL.
 
-The `ResourceProperties` and `OldResourceProperties` will be in RAW JSON format. So you will need to
-manually Unmarshal them into your own structs. Since the data structure will differ depending on the
+You will need to call the Unmarshal method and supply a struct with JSON tags as new (ResourceProperties)
+and old (OldResourcePropeties) to unmarshal the Custom properties. Since the data structure will differ depending on the
 resource types you want to create a Custom Resource for.
 
 Example usage below.
@@ -28,17 +28,29 @@ package main
 
 import (
     "context"
-    "github.com/dwtechnologies/custom-cf/lib/respond"
+    "github.com/dwtechnologies/custom-cf/lib/events"
     "github.com/aws/aws-lambda-go/lambda"
 )
+
+type Resource struct {
+    Key1 string `json:"Key1"`
+    Key2 string `json:"Key2"`
+}
 
 func main() {
     lambda.Start(handler)
 }
 
 func handler(ctx context.Context, req *respond.Request) error {
-    // Do something with req.
     // Unmarshal ResourceProperties and OldResourceProperties.
+    new, old := &events{}, &events{}
+    if err := req.Unmarshal(new, old); err != nil {
+        return err
+    }
+
+    // Do something here with the data...
+
+    // Save the response to s3.
     return req.Send("testID1", map[string]string{"key1": "value1"}, nil)
 }
 ```
