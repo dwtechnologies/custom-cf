@@ -1,7 +1,7 @@
-// Package respond can be used to handle requests for custom resources for
+// Package events can be used to handle requests for custom resources for
 // CloudFormation as well as handling the response and saving the results
 // of the operation to the pre-signed S3 URL.
-package respond
+package events
 
 import (
 	"bytes"
@@ -22,7 +22,7 @@ type Request struct {
 	ResourceType          string          `json:"ResourceType"`
 	LogicalResourceID     string          `json:"LogicalResourceId"`
 	ResourceProperties    json.RawMessage `json:"ResourceProperties"`
-	OldResourceProperties json.RawMessage `json:"OldResourceProperties"`
+	OldResourceProperties json.RawMessage `json:"OldResourceProperties,omitempty"`
 }
 
 // Response is the data that will be stored on the pre-signed S3 url.
@@ -35,6 +35,44 @@ type response struct {
 	RequestID          string            `json:"RequestId"`          /* Required */
 	LogicalResourceID  string            `json:"LogicalResourceId"`  /* Required */
 	Data               map[string]string `json:"Data,omitempty"`     /* Resource Properties data that can be accessed through Fn::GatAtt*/
+}
+
+// Unmarshal will unmarshal req.ResourceProperties to new and req.OldResourceProperties to old.
+// If either ResourceProperties or OldResourceProperties are empty nil will be return on respective
+// interface.
+// Returns error.
+func (req *Request) Unmarshal(new interface{}, old interface{}) error {
+	// Set new interface.
+	switch {
+	case req.ResourceProperties == nil:
+		new = nil
+	case string(req.ResourceProperties) == "":
+		new = nil
+	default:
+		if err := json.Unmarshal(req.ResourceProperties, new); err != nil {
+			return fmt.Errorf("Couldn't unmarshal *Request.ResourceProperties to new. Error %s", err.Error())
+		}
+	}
+
+	// If we didn't get req.RequestType == Update we never should have OldResourceProperties.
+	if req.RequestType != "Update" {
+		old = nil
+		return nil
+	}
+
+	// Set old interface.
+	switch {
+	case req.OldResourceProperties == nil:
+		old = nil
+	case string(req.OldResourceProperties) == "":
+		old = nil
+	default:
+		if err := json.Unmarshal(req.OldResourceProperties, old); err != nil {
+			return fmt.Errorf("Couldn't unmarshal *Request.OldResourceProperties to old. Error %s", err.Error())
+		}
+	}
+
+	return nil
 }
 
 // Send takes physicalID and respError and sends it to an S3 pre-signed url.

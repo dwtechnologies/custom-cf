@@ -1,4 +1,4 @@
-package respond
+package events
 
 import (
 	"fmt"
@@ -16,6 +16,16 @@ type testRequest struct {
 	err        error // Simulated error
 	resp       string
 	respErr    error // Expected error
+}
+
+type testUnmarshal struct {
+	req *Request
+	new *testProps
+	old *testProps
+}
+
+type testProps struct {
+	Key1 string `json:"Key1"`
 }
 
 // Test common Send scenarios.
@@ -195,5 +205,101 @@ func TestDoRequestTestRetries(t *testing.T) {
 		if err.Error() != errMessage {
 			t.Errorf("Expected '%s' but got '%s'", errMessage, err.Error())
 		}
+	}
+}
+
+// Will test Unmarshal.
+func TestUnmarshal(t *testing.T) {
+	req := &Request{RequestType: "Update", ResourceProperties: []byte(`{"key1":"value1"}`), OldResourceProperties: []byte(`{"key1":"value2"}`)}
+	new := &testProps{}
+	old := &testProps{}
+
+	if err := req.Unmarshal(new, old); err != nil {
+		t.Errorf("Got error %s", err.Error())
+	}
+
+	if new.Key1 != "value1" {
+		t.Errorf("Expected value1 but got %s", new.Key1)
+	}
+
+	if old.Key1 != "value2" {
+		t.Errorf("Expected value2 but got %s", old.Key1)
+	}
+}
+
+// Will test Unmarshal when not Type update. OldResourceProperties should always be nil.
+func TestUnmarshalNotUpdate(t *testing.T) {
+	req := &Request{RequestType: "Create", ResourceProperties: []byte(`{"key1":"value1"}`), OldResourceProperties: []byte(`{"key1":"value2"}`)}
+	new := &testProps{}
+	old := &testProps{}
+
+	if err := req.Unmarshal(new, old); err != nil {
+		t.Errorf("Got error %s", err.Error())
+	}
+
+	if new.Key1 != "value1" {
+		t.Errorf("Expected value1 but got %s", new.Key1)
+	}
+
+	if old.Key1 != "" {
+		t.Errorf("Expected empty for old value")
+	}
+}
+
+// Test Unmarshal when no values are set.
+func TestUnmarshalNilValues(t *testing.T) {
+	req := &Request{}
+	new := &testProps{}
+	old := &testProps{}
+
+	if err := req.Unmarshal(new, old); err != nil {
+		t.Errorf("Got error %s", err.Error())
+	}
+
+	if new.Key1 != "" {
+		t.Errorf("Expected empty value but got %s", new.Key1)
+	}
+
+	if old.Key1 != "" {
+		t.Errorf("Expected empty value but got %s", old.Key1)
+	}
+}
+
+// Test Unmarshal when values are set but empty.
+func TestUnmarshalEmptyValues(t *testing.T) {
+	req := &Request{ResourceProperties: []byte(""), OldResourceProperties: []byte("")}
+	new := &testProps{}
+	old := &testProps{}
+
+	if err := req.Unmarshal(new, old); err != nil {
+		t.Errorf("Got error %s", err.Error())
+	}
+
+	if new.Key1 != "" {
+		t.Errorf("Expected empty value but got %s", new.Key1)
+	}
+
+	if old.Key1 != "" {
+		t.Errorf("Expected empty value but got %s", old.Key1)
+	}
+}
+
+// Unmarshal wrong values into new.
+func TestUnmarshalWrongValuesNew(t *testing.T) {
+	req := &Request{ResourceProperties: []byte(`{"Key1":123}`)}
+	new := &testProps{}
+
+	if err := req.Unmarshal(new, nil); err == nil {
+		t.Errorf("Expected error, but got nil")
+	}
+}
+
+// Unmarshal wrong values into old.
+func TestUnmarshalWrongValuesOld(t *testing.T) {
+	req := &Request{RequestType: "Update", OldResourceProperties: []byte(`{"Key1":123}`)}
+	old := &testProps{}
+
+	if err := req.Unmarshal(nil, old); err == nil {
+		t.Errorf("Expected error, but got nil")
 	}
 }
