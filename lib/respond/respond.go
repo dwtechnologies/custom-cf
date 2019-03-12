@@ -27,26 +27,28 @@ type Request struct {
 
 // Response is the data that will be stored on the pre-signed S3 url.
 // The Data part should contain your ResourceProperties as JSON
-type Response struct {
-	Status             string          `json:"Status"`             /* Required */
-	Reason             string          `json:"Reason,omitempty"`   /* Should only be set if Status == Failed */
-	PhysicalResourceID string          `json:"PhysicalResourceId"` /* Required */
-	StackID            string          `json:"StackId"`            /* Required */
-	RequestID          string          `json:"RequestId"`          /* Required */
-	LogicalResourceID  string          `json:"LogicalResourceId"`  /* Required */
-	Data               json.RawMessage `json:"Data,omitempty"`     /* Resource Properties data */
+type response struct {
+	Status             string            `json:"Status"`             /* Required */
+	Reason             string            `json:"Reason,omitempty"`   /* Should only be set if Status == Failed */
+	PhysicalResourceID string            `json:"PhysicalResourceId"` /* Required */
+	StackID            string            `json:"StackId"`            /* Required */
+	RequestID          string            `json:"RequestId"`          /* Required */
+	LogicalResourceID  string            `json:"LogicalResourceId"`  /* Required */
+	Data               map[string]string `json:"Data,omitempty"`     /* Resource Properties data that can be accessed through Fn::GatAtt*/
 }
 
 // Send takes physicalID and respError and sends it to an S3 pre-signed url.
 // physicalID should be a unique physicalID that the resource should have, naming will
 // depend on the type of resource you're creating but can often be "put together" by
 // various fields from ResourceProperties.
+// data should be key value pairs of data that you want to be able to access with the
+// Fn::GetAtt function in the CloudFormation template.
 // respErr is the response error, if the resource creation failed we still need to save
 // the state FAILED to S3 for the Custom Resource to work.
 // Returns error.
-func (req *Request) Send(physicalID string, respErr error) error {
+func (req *Request) Send(physicalID string, data map[string]string, respErr error) error {
 	// Create Response.
-	body, err := req.createResponse(physicalID, respErr)
+	body, err := req.createResponse(physicalID, data, respErr)
 	if err != nil {
 		return err
 	}
@@ -59,16 +61,17 @@ func (req *Request) Send(physicalID string, respErr error) error {
 	return nil
 }
 
-// createResponse takes physicalID and err and creates a response JSON bytes that can be sent to the pre-signed s3 url.
+// createResponse takes physicalID, data and err and creates a response JSON bytes that can be sent to the pre-signed s3 url.
+// Where data is key value pairs that you want to be accessed through Fn::GetAtt, can be nil if not needed.
 // Returns []byte and error.
-func (req *Request) createResponse(physicalID string, respErr error) ([]byte, error) {
-	resp := &Response{
+func (req *Request) createResponse(physicalID string, data map[string]string, respErr error) ([]byte, error) {
+	resp := &response{
 		Status:             "SUCCESS",
 		StackID:            req.StackID,
 		RequestID:          req.RequestID,
 		PhysicalResourceID: physicalID,
 		LogicalResourceID:  req.LogicalResourceID,
-		Data:               req.ResourceProperties,
+		Data:               data,
 	}
 
 	if respErr != nil {
