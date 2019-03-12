@@ -1,4 +1,4 @@
-module github.com/dwtechnologies/cf-custom
+module github.com/dwtechnologies/custom-cf
 
 require (
 	github.com/aws/aws-lambda-go v1.9.0
