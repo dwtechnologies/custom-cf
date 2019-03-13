@@ -8,9 +8,8 @@ import (
 )
 
 // setUICustomization will set UI details for clientID on the user pool with
-// settings specified by req. If the user pool already exists it will be updated with
-// the settings in req.
-// Returns error.
+// settings specified by req.
+// Returns a map of properties and error.
 func (c *config) setUICustomization(req *events.Request) (map[string]string, error) {
 	resp, err := c.svc.SetUICustomizationRequest(
 		&cognitoidentityprovider.SetUICustomizationInput{
