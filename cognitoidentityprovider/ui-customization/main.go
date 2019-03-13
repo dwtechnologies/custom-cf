@@ -90,7 +90,9 @@ func createConfig(ctx context.Context, req *events.Request) *config {
 			"logicalResourceId":  req.LogicalResourceID,
 			"resourceProperties": req.ResourceProperties,
 		}),
-		physicalID: "NotAviable",
+		physicalID:            "NotAviable",
+		resourceProperties:    &UICustomization{},
+		oldResourceProperties: &UICustomization{},
 	}
 }
 
