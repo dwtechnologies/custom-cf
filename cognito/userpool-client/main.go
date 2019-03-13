@@ -20,7 +20,7 @@ import (
 const (
 	service      = "custom-cf"
 	function     = "userpool-client"
-	resourceType = "Custom::UserPoolClient"
+	resourceType = "Custom::CognitoUserPoolClient"
 	httpTimeout  = 30
 )
 
