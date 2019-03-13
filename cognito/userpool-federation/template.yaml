@@ -1,5 +1,4 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Transform: "AWS::Serverless-2016-10-31"
 Description: "Cognito UserPool Federation CloudFormation Support"
 
 Parameters:
@@ -8,8 +7,12 @@ Parameters:
     Type: "String"
     Default: "dev"
 
-  CodeUri:
-    Description: "Code Uri Path"
+  S3Bucket:
+    Description: "S3 bucket for lambda code"
+    Type: "String"
+
+  S3Key:
+    Description: "Key to where lambda code is located"
     Type: "String"
 
   FunctionName:
@@ -18,7 +21,7 @@ Parameters:
 
 Resources:
   Lambda:
-    Type: "AWS::Serverless::Function"
+    Type: "AWS::Lambda::Function"
     DependsOn:
       - "Role"
       - "LogGroup"
@@ -28,7 +31,9 @@ Resources:
       Role: !GetAtt "Role.Arn"
       Handler: "handler"
       Runtime: "go1.x"
-      CodeUri: !Ref "CodeUri"
+      Code:
+        S3Bucket: !Ref "S3Bucket"
+        S3Key: !Ref "S3Key"
       Environment:
         Variables:
           ENVIRONMENT: !Ref "Environment"
