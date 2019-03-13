@@ -3,7 +3,7 @@
 
 ```yaml
 Resources:
-  CognitoClientUIWengy:
+  CognitoClientUI:
     Type: Custom::CognitoUserPoolUICustomization
     Properties:
       ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::Account}:function:<function-name>
