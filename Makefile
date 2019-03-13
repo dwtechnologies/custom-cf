@@ -1,17 +1,13 @@
 .PHONY: package-cf deploy-cf build clean
 
-PWD                := $(shell pwd)
-PROJECT            ?= custom-cf
-OWNER              ?=
-ENVIRONMENT        ?= dev
-AWS_REGION         ?=
-AWS_PROFILE        ?=
-
-# S3 Bucket setup for artifacts from package-cf.
-S3_BUCKET_DEV  ?=
-S3_BUCKET_TEST ?=
-S3_BUCKET_PROD ?= 
-S3_BUCKET      := $(S3_BUCKET_$(shell echo $(ENVIRONMENT) | tr '[a-z]' '[A-Z]'))
+PWD          := $(shell pwd)
+PROJECT      ?= custom-cf
+OWNER        ?=
+ENVIRONMENT  ?= dev
+AWS_REGION   ?=
+AWS_PROFILE  ?=
+S3_BUCKET    ?=
+FUNCTIONNAME := $(shell echo $(FUNCTION) | sed -e 's/\//-/g')
 
 # Check vars inside targets by calling "@:$(call check_var, VAR)"
 check_var = $(strip $(foreach 1,$1,$(call __check_var,$1,$(strip $(value 2)))))
@@ -28,9 +24,9 @@ package-cf:
 	@:$(call check_var, FUNCTION)
 	@aws cloudformation package \
 		--template-file ./$(FUNCTION)/template.yaml \
-		--output-template-file ./build/$(FUNCTION)/template-$(ENVIRONMENT).yaml \
+		--output-template-file ./build/$(FUNCTIONNAME)/template-$(ENVIRONMENT).yaml \
 		--profile $(AWS_PROFILE) --region $(AWS_REGION) \
-		--s3-bucket $(S3_BUCKET) --s3-prefix lambda/$(PROJECT)/$(FUNCTION)-$(ENVIRONMENT)
+		--s3-bucket $(S3_BUCKET) --s3-prefix lambda/$(PROJECT)/$(FUNCTIONNAME)-$(ENVIRONMENT)
 
 deploy-cf:
 	@:$(call check_var, ENVIRONMENT)
@@ -40,13 +36,14 @@ deploy-cf:
 	@:$(call check_var, OWNER)
 	@:$(call check_var, FUNCTION)
 	@aws cloudformation deploy \
-		--template-file ./build/$(FUNCTION)/template-$(ENVIRONMENT).yaml \
-		--stack-name $(FUNCTION)-$(ENVIRONMENT) \
+		--template-file ./build/$(FUNCTIONNAME)/template-$(ENVIRONMENT).yaml \
+		--stack-name $(FUNCTIONNAME)-$(ENVIRONMENT) \
 		--profile $(AWS_PROFILE) --region $(AWS_REGION) \
 		--capabilities CAPABILITY_NAMED_IAM \
 		--no-fail-on-empty-changeset \
 		--parameter-overrides \
 			Environment=$(ENVIRONMENT) \
+			FunctionName=$(FUNCTIONNAME) \
 		--tags \
 			Environment=$(ENVIRONMENT) \
 			Project=$(PROJECT) \
@@ -57,7 +54,7 @@ deploy-cf:
 build:
 	@:$(call check_var, PWD)
 	@:$(call check_var, FUNCTION)
-	@mkdir -p ./build/$(FUNCTION)
+	@mkdir -p ./build/$(FUNCTIONNAME)
 	@docker run --rm \
 		-v $(PWD)/build:/build \
 		-v $(PWD):/src \
@@ -65,7 +62,7 @@ build:
 		golang:1.12.0-stretch \
 		sh -c "apt-get update && apt-get install -y zip && \
 		cd /src/$(FUNCTION) && go build -o handler && \
-		zip handler.zip handler && rm handler && mv handler.zip /build/$(FUNCTION)"
+		zip handler.zip handler && rm handler && mv handler.zip /build/$(FUNCTIONNAME)"
 	@echo "\nProject successfully built"
 
 
