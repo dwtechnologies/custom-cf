@@ -5,7 +5,7 @@ Description: "Cognito CloudFormation UICustomization"
 Parameters:
   Environment:
     Description: "Environment"
-    Type: "String"
+    Type: String
     Default: "dev"
 
 Resources:
@@ -16,7 +16,7 @@ Resources:
       Description: !Sub cognito-cf-uicustomization-${AWS::Region}-${Environment}
       Handler: handler
       Runtime: go1.x
-      CodeUri: ../build/userpool-federation/handler.zip
+      CodeUri: handler.zip
       Environment:
         Variables:
           ENVIRONMENT: !Ref Environment
