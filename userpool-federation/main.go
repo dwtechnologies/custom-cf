@@ -111,6 +111,8 @@ func createConfig(ctx context.Context, req *events.Request) *config {
 			"resourceProperties": req.ResourceProperties,
 		}),
 		physicalID: "NotAviable",
+		resourceProperties: &IdentityProvider{},
+		oldResourceProperties: &IdentityProvider{},
 	}
 }
 
