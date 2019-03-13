@@ -7,6 +7,7 @@ life easier.
 ## Custom Resources added
 
 - [cognito/userpool-federation](cognito/userpool-federation)
+- [cognito/userpool-uicustomization](cognito/userpool-uicustomization)
 
 ## Creating a new Custom Resource
 
