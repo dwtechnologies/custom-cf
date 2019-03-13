@@ -4,9 +4,16 @@ Contains custom resources for creating resources in CloudFormation that currentl
 For creating your own please have a look in the `lib/` for common interfaces that can make your
 life easier.
 
-## libs
+## Custom Resources added
 
-### lib/events
+- [cognito/userpool-federation](cognito/userpool-federation)
+
+## Creating a new Custom Resource
+
+To create a new custom resource, please have a look in `example` folder for a simple example custom resource.
+It will use the `lib/events` package (please see info about it below).
+
+## lib/events
 
 Is used for parsing incoming Request to the lambda as well as creating the Response and sending it
 to the s3 pre-signed URL.
@@ -43,8 +50,11 @@ func main() {
 
 func handler(ctx context.Context, req *events.Request) error {
     // Unmarshal ResourceProperties and OldResourceProperties.
-    new, old := &events{}, &events{}
+    new, old := &Resource{}, &Resource{}
     if err := req.Unmarshal(new, old); err != nil {
+        if err := req.Send("testID1", nil, err); err != nil {
+            return err
+        }
         return err
     }
 
