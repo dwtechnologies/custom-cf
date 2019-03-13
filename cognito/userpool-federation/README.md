@@ -38,7 +38,7 @@ Resources:
     DependsOn:
       - "UserPool"
     Properties:
-      ProviderName: "Adopt"
+      ProviderName: "ADFS"
       ProviderType: "SAML"
       ProviderDetails:
         MetadataURL: "https://my.domain.com/FederationMetadata.xml"
