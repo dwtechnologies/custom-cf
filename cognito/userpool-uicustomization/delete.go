@@ -15,9 +15,8 @@ const defaultCSS = ".logo-customizable {max-width: 60%;max-height: 30%;}.banner-
 func (c *config) deleteUICustomization(req *events.Request) error {
 	_, err := c.svc.SetUICustomizationRequest(
 		&cognitoidentityprovider.SetUICustomizationInput{
-			CSS:      aws.String(defaultCSS),
-			ClientId: &c.resourceProperties.ClientID,
-			// ImageFile:  c.resourceProperties.ImageFile,
+			CSS:        aws.String(defaultCSS),
+			ClientId:   &c.resourceProperties.ClientID,
 			UserPoolId: &c.resourceProperties.UserPoolID,
 		}).Send()
 	if err != nil {
