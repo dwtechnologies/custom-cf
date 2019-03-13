@@ -130,7 +130,7 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 
 	switch {
 	case req.RequestType == "Delete":
-		return nil, nil
+		return nil, c.deleteUICustomization(req)
 
 	case req.RequestType == "Create":
 		return c.setUICustomization(req)
