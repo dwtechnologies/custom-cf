@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Description: "Cognito CloudFormation UICustomization"
+
+Parameters:
+  Environment:
+    Description: "Environment"
+    Type: String
+    Default: "dev"
+
+Resources:
+  Lambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub cognito-cf-uicustomization-${AWS::Region}-${Environment}
+      Description: !Sub cognito-cf-uicustomization-${AWS::Region}-${Environment}
+      Handler: handler
+      Runtime: go1.x
+      CodeUri: handler.zip
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref Environment
+      Timeout: 60
+      MemorySize: 128
+      Policies:
+        - Statement:
+          - Effect: "Allow"
+            Action:
+              - "cognito-idp:SetUICustomization"
+            Resource: !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/*"
+
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/cognito-cf-uicustomization-${AWS::Region}-${Environment}
+      RetentionInDays: 90
+
