@@ -15,7 +15,7 @@ import (
 // http client timeout in seconds.
 const (
 	service      = "cognito-cf"
-	function     = "ui-customization"
+	function     = "uicustomization"
 	resourceType = "Custom::CognitoUserPoolUICustomization"
 	httpTimeout  = 30
 )
