@@ -43,6 +43,7 @@ deploy-cf:
 		--no-fail-on-empty-changeset \
 		--parameter-overrides \
 			Environment=$(ENVIRONMENT) \
+			CodeUri=../build/$(FUNCTIONNAME)/handler.zip \
 			FunctionName=$(FUNCTIONNAME) \
 		--tags \
 			Environment=$(ENVIRONMENT) \

@@ -8,6 +8,10 @@ Parameters:
     Type: "String"
     Default: "dev"
 
+  CodeUri:
+    Description: "Code Uri Path"
+    Type: "String"
+
   FunctionName:
     Description: "The Function name"
     Type: "String"
@@ -24,7 +28,7 @@ Resources:
       Role: !GetAtt "Role.Arn"
       Handler: "handler"
       Runtime: "go1.x"
-      CodeUri: !Sub "../build/${FunctionName}/handler.zip"
+      CodeUri: !Ref "CodeUri"
       Environment:
         Variables:
           ENVIRONMENT: !Ref "Environment"
