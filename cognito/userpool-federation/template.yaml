@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: "AWS::Serverless-2016-10-31"
-Description: "Cognito CloudFormation Federation, App Client Settings support"
+Description: "Cognito UserPool Federation CloudFormation Support"
 
 Parameters:
   Environment:
@@ -8,28 +8,33 @@ Parameters:
     Type: "String"
     Default: "dev"
 
+  FunctionName:
+    Description: "The Function name"
+    Type: "String"
+
 Resources:
-  FederationLambda:
+  Lambda:
     Type: "AWS::Serverless::Function"
     DependsOn:
-      - "FederationRole"
+      - "Role"
+      - "LogGroup"
     Properties:
-      FunctionName: !Sub "cognito-cf-federation-${AWS::Region}-${Environment}"
-      Description: !Sub "cognito-cf-federation-${AWS::Region}-${Environment}"
-      Role: !GetAtt "FederationRole.Arn"
+      FunctionName: !Sub "${FunctionName}-${AWS::Region}-${Environment}"
+      Description: !Sub "${FunctionName}-${AWS::Region}-${Environment}"
+      Role: !GetAtt "Role.Arn"
       Handler: "handler"
       Runtime: "go1.x"
-      CodeUri: "../build/userpool-federation/handler.zip"
+      CodeUri: !Sub "../build/${FunctionName}/handler.zip"
       Environment:
         Variables:
           ENVIRONMENT: !Ref "Environment"
       Timeout: 60
       MemorySize: 128
 
-  FederationRole:
+  Role:
     Type: "AWS::IAM::Role"
     Properties:
-      RoleName: !Sub "cognito-cf-federation-role-${AWS::Region}-${Environment}"
+      RoleName: !Sub "${FunctionName}-role-${AWS::Region}-${Environment}"
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
       AssumeRolePolicyDocument:
@@ -40,7 +45,7 @@ Resources:
             Principal:
               Service: "lambda.amazonaws.com"
       Policies:
-        - PolicyName: "cognito"
+        - PolicyName: !Sub "${FunctionName}-policy"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -53,8 +58,8 @@ Resources:
                   - "cognito-idp:DeleteIdentityProvider"
                 Resource: !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/*"
 
-  FederationLogGroup:
+  LogGroup:
     Type: "AWS::Logs::LogGroup"
     Properties:
-      LogGroupName: !Sub "/aws/lambda/cognito-cf-federation-${AWS::Region}-${Environment}"
+      LogGroupName: !Sub "/aws/lambda/${FunctionName}-${AWS::Region}-${Environment}"
       RetentionInDays: 90
