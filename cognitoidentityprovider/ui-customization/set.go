@@ -14,9 +14,9 @@ import (
 func (c *config) setUICustomization(req *events.Request) (map[string]string, error) {
 	resp, err := c.svc.SetUICustomizationRequest(
 		&cognitoidentityprovider.SetUICustomizationInput{
-			CSS:      &c.resourceProperties.CSS,
-			ClientId: &c.resourceProperties.ClientID,
-			// ImageFile:  &c.resourceProperties.ImageFile,
+			CSS:        &c.resourceProperties.CSS,
+			ClientId:   &c.resourceProperties.ClientID,
+			ImageFile:  c.resourceProperties.ImageFile,
 			UserPoolId: &c.resourceProperties.UserPoolID,
 		}).Send()
 	if err != nil {
