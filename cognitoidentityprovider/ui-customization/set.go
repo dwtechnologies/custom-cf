@@ -11,17 +11,21 @@ import (
 // settings specified by req. If the user pool already exists it will be updated with
 // the settings in req.
 // Returns error.
-func (c *config) setUICustomization(req *events.Request) error {
+func (c *config) setUICustomization(req *events.Request) (map[string]string, error) {
 	resp, err := c.svc.SetUICustomizationRequest(
 		&cognitoidentityprovider.SetUICustomizationInput{
-			CSS:        &c.resourceProperties.CSS,
-			ClientID:   &c.resourceProperties.ClientID,
-			ImageFile:  &c.resourceProperties.ImageFile,
-			UserPoolID: &c.resourceProperties.UserPoolID,
+			CSS:      &c.resourceProperties.CSS,
+			ClientId: &c.resourceProperties.ClientID,
+			// ImageFile:  &c.resourceProperties.ImageFile,
+			UserPoolId: &c.resourceProperties.UserPoolID,
 		}).Send()
 	if err != nil {
 		return nil, fmt.Errorf("Failed to set UI Customization. Error %s", err.Error())
 	}
 
-	return err
+	return map[string]string{
+		"CSSVersion": *resp.UICustomization.CSSVersion,
+		"ClientId":   *resp.UICustomization.ClientId,
+		"UserPoolId": *resp.UICustomization.UserPoolId,
+	}, nil
 }

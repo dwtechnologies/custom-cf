@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go-v2/aws/external"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
-	"github.com/aws/aws-sdk-go-v2/service/external"
 	"github.com/dwtechnologies/custom-cf/lib/events"
 	l "github.com/nuttmeister/llogger"
 )
@@ -118,9 +118,7 @@ func (c *config) createCognitoService() error {
 	return nil
 }
 
-// run will either create, update or delete the specified identity provider.
-// If the identity provider already exists in the user pool it will be adopted into the
-// cf stack. This so that manually created identity providers don't have to be recreated.
+// run will either create, update or delete the UI customization
 // Returns map[string]string and error.
 func (c *config) run(req *events.Request) (map[string]string, error) {
 	// Check for the correct ResourceType
@@ -129,10 +127,14 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 	}
 
 	switch {
-	// If Delete is run on the stack but the Identity Provider doesn't exist.
-	case req.RequestType == "Delete" && provider == nil:
+	case req.RequestType == "Delete":
 		return nil, nil
 
+	case req.RequestType == "Create":
+		return c.setUICustomization(req)
+
+	case req.RequestType == "Update":
+		return c.setUICustomization(req)
 	}
 
 	return nil, fmt.Errorf("Didn't get RequestType Create, Update or Delete")
