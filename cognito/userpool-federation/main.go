@@ -18,8 +18,8 @@ import (
 
 // http client timeout in seconds.
 const (
-	service      = "cognito-cf"
-	function     = "federation"
+	service      = "custom-cf"
+	function     = "userpool-federation"
 	resourceType = "Custom::CognitoUserPoolFederation"
 	httpTimeout  = 30
 )
