@@ -1,7 +1,7 @@
 .PHONY: package-code deploy-cf build clean
 
 PWD          := $(shell pwd)
-HASH         := $(git rev-parse HEAD)
+HASH         := $(shell git rev-parse HEAD)
 PROJECT      ?= custom-cf
 OWNER        ?=
 ENVIRONMENT  ?= dev
