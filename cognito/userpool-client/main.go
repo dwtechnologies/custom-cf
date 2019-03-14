@@ -41,19 +41,19 @@ type Client struct {
 	ClientName           string                                          `json:"ClientName"` /* required */
 	UserPoolID           string                                          `json:"UserPoolId"` /* required */
 	GenerateSecret       bool                                            `json:"GenerateSecret"`
-	RefreshTokenValidity *int64                                          `json:"RefreshTokenValidity,omitempty"`
+	RefreshTokenValidity int64                                           `json:"RefreshTokenValidity,omitempty"`
 	ReadAttributes       []string                                        `json:"ReadAttributes,omitempty"`
 	WriteAttributes      []string                                        `json:"WriteAttributes,omitempty"`
 	ExplicitAuthFlows    []cognitoidentityprovider.ExplicitAuthFlowsType `json:"ExplicitAuthFlows,omitempty"`
 
 	// Extended features.
 	AllowedOAuthFlows               []cognitoidentityprovider.OAuthFlowType `json:"AllowedOAuthFlows,omitempty"`
-	AllowedOAuthFlowsUserPoolClient *bool                                   `json:"AllowedOAuthFlowsUserPoolClient,omitempty"`
+	AllowedOAuthFlowsUserPoolClient bool                                    `json:"AllowedOAuthFlowsUserPoolClient,omitempty"`
 	AllowedOAuthScopes              []string                                `json:"AllowedOAuthScopes,omitempty"`
 
 	CallbackURLs       []string `json:"CallbackURLs,omitempty"`
 	LogoutURLs         []string `json:"LogoutURLs,omitempty"`
-	DefaultRedirectURI *string  `json:"DefaultRedirectURI,omitempty"`
+	DefaultRedirectURI string   `json:"DefaultRedirectURI,omitempty"`
 
 	SupportedIdentityProviders []string `json:"SupportedIdentityProviders,omitempty"`
 
@@ -62,10 +62,10 @@ type Client struct {
 
 // AnalyticsConfigurationType contains config for Analytics on the Client.
 type AnalyticsConfigurationType struct {
-	ApplicationID  *string `json:"ApplicationId"`
-	ExternalID     *string `json:"ExternalId"`
-	RoleArn        *string `json:"RoleArn"`
-	UserDataShared *bool   `json:"UserDataShared"`
+	ApplicationID  string `json:"ApplicationId"`
+	ExternalID     string `json:"ExternalId"`
+	RoleArn        string `json:"RoleArn"`
+	UserDataShared bool   `json:"UserDataShared"`
 }
 
 func main() {
@@ -247,39 +247,7 @@ func (c *config) getClientByName(poolID string, clientName string) (*Client, err
 		return nil, err
 	}
 
-	// Populate client with data.
-	client := &Client{
-		id:                   id,
-		ClientName:           *resp.UserPoolClient.ClientName,
-		UserPoolID:           *resp.UserPoolClient.UserPoolId,
-
-		RefreshTokenValidity: resp.UserPoolClient.RefreshTokenValidity,
-		ReadAttributes:       resp.UserPoolClient.ReadAttributes,
-		WriteAttributes:      resp.UserPoolClient.WriteAttributes,
-		ExplicitAuthFlows:    resp.UserPoolClient.ExplicitAuthFlows,
-		
-		AllowedOAuthFlows: resp.UserPoolClient.AllowedOAuthFlows,
-		AllowedOAuthFlowsUserPoolClient: resp.UserPoolClient.AllowedOAuthFlowsUserPoolClient,
-		AllowedOAuthScopes: resp.UserPoolClient.AllowedOAuthScopes,
-
-		CallbackURLs: resp.UserPoolClient.CallbackURLs,
-		LogoutURLs: resp.UserPoolClient.LogoutURLs,
-		DefaultRedirectURI: resp.UserPoolClient.DefaultRedirectURI,
-
-		SupportedIdentityProviders: resp.UserPoolClient.SupportedIdentityProviders,
-	}
-
-	// Set Analytics if it's not nil.
-	if resp.UserPoolClient.AnalyticsConfiguration != nil {
-		client.AnalyticsConfiguration = &AnalyticsConfigurationType{
-			ApplicationID: resp.UserPoolClient.AnalyticsConfiguration.ApplicationId,
-			ExternalID: resp.UserPoolClient.AnalyticsConfiguration.ExternalId,
-			RoleArn: resp.UserPoolClient.AnalyticsConfiguration.RoleArn,
-			UserDataShared: resp.UserPoolClient.AnalyticsConfiguration.UserDataShared,
-		}
-	}
-
-	return client, nil
+	return c.responseToClient(resp, id)
 }
 
 // getClientsFromUserPool takes poolID, clients and nextToken and retrieves all clients on
@@ -313,4 +281,25 @@ func (c *config) getClientsFromUserPool(poolID string, clients []cognitoidentity
 	}
 
 	return clients, nil
+}
+
+// responseToClient takes resp and id and converts it to Client struct and returns it.
+// Returns *Client and error.
+func (c *config) responseToClient(resp *cognitoidentityprovider.DescribeUserPoolClientOutput, id string) (*Client, error) {
+	// Simple validation that will result in error.
+	switch {
+	case resp.UserPoolClient.ClientName == nil:
+		return nil, fmt.Errorf("ClientName can't be empty")
+
+	case resp.UserPoolClient.UserPoolId == nil:
+		return nil, fmt.Errorf("UserPoolId can't be empty")
+	}
+
+	client := &Client{
+		id:         id,
+		ClientName: *resp.UserPoolClient.ClientName,
+		UserPoolID: *resp.UserPoolClient.UserPoolId,
+	}
+
+	return client, nil
 }
