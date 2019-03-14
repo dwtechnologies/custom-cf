@@ -16,7 +16,7 @@ import (
 const (
 	service      = "custom-cf"
 	function     = "tag"
-	resourceType = "Custom::ECSTag"
+	resourceType = "Custom::ECSTags"
 	httpTimeout  = 30
 )
 

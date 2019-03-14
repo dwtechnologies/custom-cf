@@ -1,5 +1,5 @@
 # ecs/tags
-Custom cloudformation resource to support
+Custom cloudformation resource to support:
 - AWS::ECS::Cluster.Tags
 - AWS::ECS::TaskDefinition.Tags
 - AWS::ECS::Service.Tags
@@ -14,7 +14,7 @@ Resources:
       ClusterName: production-cluster
 
   DefaultClusterTags:
-    Type: Custom::ECSTag
+    Type: Custom::ECSTags
     Properties:
       ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:<function-name>
       ResourceArn: !GetAtt ECScluster.Arn
@@ -27,7 +27,7 @@ Resources:
          Value: cloudops
 
   AlpineTaskDefinitionTags:
-    Type: Custom::ECSTag
+    Type: Custom::ECSTags
     Properties:
       ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:<function-name>
       ResourceArn: !Sub arn:aws:ecs:${AWS::Region}:${AWS::AccountId}:task-definition/alpine:1
@@ -40,7 +40,7 @@ Resources:
          Value: cloudops
 
   WebServiceTags:
-    Type: Custom::ECSTag
+    Type: Custom::ECSTags
     Properties:
       ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:<function-name>
       ResourceArn: !Sub arn:aws:ecs:${AWS::Region}:${AWS::AccountId}:service/default/web
