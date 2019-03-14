@@ -80,10 +80,16 @@ func (c *config) createClient(req *events.Request) (map[string]string, error) {
 		return nil, fmt.Errorf("Failed to create Client. Error %s", err.Error())
 	}
 
-	return map[string]string{
-		"ClientName":   *resp.UserPoolClient.ClientName,
-		"ClientId":     *resp.UserPoolClient.ClientId,
-		"ClientSecret": *resp.UserPoolClient.ClientSecret,
-		"UserPoolId":   *resp.UserPoolClient.UserPoolId,
-	}, nil
+	attr := map[string]string{
+		"ClientName": *resp.UserPoolClient.ClientName,
+		"ClientId":   *resp.UserPoolClient.ClientId,
+		"UserPoolId": *resp.UserPoolClient.UserPoolId,
+	}
+
+	// Only set ClientSecret if it's set.
+	if resp.UserPoolClient.ClientSecret != nil {
+		attr["ClientSecret"] = *resp.UserPoolClient.ClientSecret
+	}
+
+	return attr, nil
 }
