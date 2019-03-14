@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "ECS Tags CloudFormation Support"
+
+Parameters:
+  Environment:
+    Description: "Environment"
+    Type: "String"
+    Default: "dev"
+
+  S3Bucket:
+    Description: "S3 bucket for lambda code"
+    Type: "String"
+
+  S3Key:
+    Description: "Key to where lambda code is located"
+    Type: "String"
+
+  FunctionName:
+    Description: "The Function name"
+    Type: "String"
+
+Resources:
+  Lambda:
+    Type: "AWS::Lambda::Function"
+    DependsOn:
+      - "Role"
+      - "LogGroup"
+    Properties:
+      FunctionName: !Sub "${FunctionName}-${AWS::Region}-${Environment}"
+      Description: !Sub "${FunctionName}-${AWS::Region}-${Environment}"
+      Role: !GetAtt "Role.Arn"
+      Handler: "handler"
+      Runtime: "go1.x"
+      Code:
+        S3Bucket: !Ref "S3Bucket"
+        S3Key: !Ref "S3Key"
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref "Environment"
+      Timeout: 60
+      MemorySize: 128
+
+  Role:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: !Sub "${FunctionName}-role-${AWS::Region}-${Environment}"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action: "sts:AssumeRole"
+            Principal:
+              Service: "lambda.amazonaws.com"
+      Policies:
+        - PolicyName: !Sub "${FunctionName}-policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "ecs:TagResource"
+                  - "ecs:UntagResource"
+                Resource:
+                  - !Sub "arn:aws:ecs:${AWS::Region}:${AWS::AccountId}:cluster/*"
+                  - !Sub "arn:aws:ecs:${AWS::Region}:${AWS::AccountId}:task-definition*"
+                  - !Sub "arn:aws:ecs:${AWS::Region}:${AWS::AccountId}:service/cluster-name/service-name*"
+
+  LogGroup:
+    Type: "AWS::Logs::LogGroup"
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${FunctionName}-${AWS::Region}-${Environment}"
+      RetentionInDays: 90
+
