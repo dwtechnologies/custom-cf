@@ -1,11 +1,11 @@
 # ecs/tags
-Custom cloudformation resource to support:
+Custom Cloudformation resource to support:
 - AWS::ECS::Cluster.Tags
 - AWS::ECS::TaskDefinition.Tags
 - AWS::ECS::Service.Tags
 
 
-Sample cloudformation resource
+Sample Cloudformation resource
 ```yaml
 Resources:
   ECScluster:
