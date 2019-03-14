@@ -16,7 +16,7 @@ Resources:
   DefaultClusterTags:
     Type: Custom::ECSTag
     Properties:
-      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::Account}:function:<function-name>
+      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:<function-name>
       ResourceArn: !GetAtt ECScluster.Arn
       Tags:
 	- Key: Location
