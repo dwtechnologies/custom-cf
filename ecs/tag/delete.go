@@ -17,6 +17,10 @@ func (c *config) deleteTags(req *events.Request) error {
 		curTagKeys = append(curTagKeys, *tag.Key)
 	}
 
+	// append CF stack-id, stack-name
+	curTagKeys = append(curTagKeys, "cloudformation:stack-id")
+	curTagKeys = append(curTagKeys, "cloudformation:stack-name")
+
 	_, err := c.svc.UntagResourceRequest(
 		&ecs.UntagResourceInput{
 			ResourceArn: &c.resourceProperties.ResourceArn,
