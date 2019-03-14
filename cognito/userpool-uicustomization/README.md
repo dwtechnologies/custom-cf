@@ -1,4 +1,4 @@
-# cognito/userpool-uicustomization
+# userpool-uicustomization
 
 Sample cloudformation resource
 ```yaml
