@@ -19,7 +19,7 @@ func (c *config) deleteTags(req *events.Request) error {
 
 	_, err := c.svc.UntagResourceRequest(
 		&ecs.UntagResourceInput{
-			ResourceArn: &c.resourceProperties.ResourceARN,
+			ResourceArn: &c.resourceProperties.ResourceArn,
 			TagKeys:     curTagKeys,
 		}).Send()
 	if err != nil {

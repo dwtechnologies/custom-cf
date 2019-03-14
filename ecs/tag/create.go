@@ -28,7 +28,7 @@ func (c *config) createTags(req *events.Request) (map[string]string, error) {
 
 	_, err := c.svc.TagResourceRequest(
 		&ecs.TagResourceInput{
-			ResourceArn: &c.resourceProperties.ResourceARN,
+			ResourceArn: &c.resourceProperties.ResourceArn,
 			Tags:        c.resourceProperties.Tags,
 		}).Send()
 	if err != nil {

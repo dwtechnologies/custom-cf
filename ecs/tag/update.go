@@ -30,7 +30,7 @@ func (c *config) updateTags(req *events.Request) (map[string]string, error) {
 	if len(unTags) > 0 {
 		_, err := c.svc.UntagResourceRequest(
 			&ecs.UntagResourceInput{
-				ResourceArn: &c.resourceProperties.ResourceARN,
+				ResourceArn: &c.resourceProperties.ResourceArn,
 				TagKeys:     unTags,
 			}).Send()
 		if err != nil {
@@ -54,7 +54,7 @@ func (c *config) updateTags(req *events.Request) (map[string]string, error) {
 	// add c.resourceProperties.Tags tags
 	_, err := c.svc.TagResourceRequest(
 		&ecs.TagResourceInput{
-			ResourceArn: &c.resourceProperties.ResourceARN,
+			ResourceArn: &c.resourceProperties.ResourceArn,
 			Tags:        c.resourceProperties.Tags,
 		}).Send()
 	if err != nil {
