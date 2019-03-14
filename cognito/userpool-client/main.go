@@ -225,6 +225,7 @@ func (c *config) getClientByName(poolID string, clientName string) (*Client, err
 	for _, client := range list {
 		fmt.Println(*client.ClientName, clientName)
 		if *client.ClientName == clientName {
+			fmt.Println("Settings client id", *client.ClientId)
 			id = *client.ClientId
 		}
 	}
@@ -272,8 +273,6 @@ func (c *config) getClientsFromUserPool(poolID string, clients []cognitoidentity
 	if err != nil {
 		return clients, fmt.Errorf("Couldn't get Clients for UserPool ID: %s. Error %s", poolID, err.Error())
 	}
-
-	fmt.Println(resp.UserPoolClients)
 
 	// Append clients.
 	clients = append(clients, resp.UserPoolClients...)
