@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws/external"
@@ -15,7 +16,7 @@ import (
 // http client timeout in seconds.
 const (
 	service      = "custom-cf"
-	function     = "tags"
+	function     = "tag"
 	resourceType = "Custom::ECSTag"
 	httpTimeout  = 30
 )
@@ -30,7 +31,7 @@ type config struct {
 }
 
 type ResourceTags struct {
-	ResourceARN string    `json:"ResourceARN"`
+	ResourceArn string    `json:"ResourceArn"`
 	Tags        []ecs.Tag `json:"Tags"`
 }
 
@@ -57,8 +58,8 @@ func handler(ctx context.Context, req *events.Request) error {
 	}
 
 	// Set physical ID
-	// c.physicalID = fmt.Sprintf("%s-%s", c.resourceProperties.UserPoolID, c.resourceProperties.ClientID)
-	c.physicalID = fmt.Sprintf("tags-aaa")
+	r := strings.NewReplacer(":", "", "/", "", "-", "")
+	c.physicalID = fmt.Sprintf(r.Replace(strings.Split(c.resourceProperties.ResourceArn, ":")[5]))
 
 	// create, update or delete
 	data, err := c.run(req)
