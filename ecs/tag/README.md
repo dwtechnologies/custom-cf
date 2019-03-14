@@ -20,10 +20,37 @@ Resources:
       ResourceArn: !GetAtt ECScluster.Arn
       Tags:
 	- Key: Location
-	  Value: Stockholm
+	  Value: stockholm
 	- Key: Environment
 	  Value: prod
 	- Key: Owner
 	  Value: cloudops
+
+  AlpineTaskDefinitionTags:
+    Type: Custom::ECSTag
+    Properties:
+      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:<function-name>
+      ResourceArn: !Sub arn:aws:ecs:${AWS::Region}:${AWS::AccountId}:task-definition/alpine:1
+      Tags:
+        - Key: Location
+	  Value: stockholm
+	- Key: Environment
+	  Value: prod
+	- Key: Owner
+	  Value: cloudops
+
+  WebServiceTags:
+    Type: Custom::ECSTag
+    Properties:
+      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:<function-name>
+      ResourceArn: !Sub arn:aws:ecs:${AWS::Region}:${AWS::AccountId}:service/default/web
+      Tags:
+        - Key: Location
+	  Value: stockholm
+	- Key: Environment
+	  Value: prod
+	- Key: Owner
+	  Value: cloudops
+
 ```
 
