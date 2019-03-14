@@ -10,9 +10,36 @@ Please look at the individual `README.md` files in the functions folders.
 
 ## Custom Resources
 
+### Cognito
+
 - [cognito/userpool-federation](cognito/userpool-federation)
 - [cognito/userpool-uicustomization](cognito/userpool-uicustomization)
 - [cognito/userpool-client](cognito/userpool-client)
+
+### ECS
+
+- [ecs/tags](ecs/tags)
+
+## Requirements
+
+- docker
+- aws cli
+
+## Deployment
+
+Use the included `Makefile` to deploy the resources.
+
+The `OWNER` env var is for tagging. So you can set this to what you want.
+
+```bash
+AWS_PROFILE=my-profile AWS_REGION=region OWNER=TeamName S3_BUCKET=my-artifact-bucket FUNCTION=folder/my-resource make deploy
+```
+
+Example
+
+```bash
+AWS_PROFILE=default AWS_REGION=eu-west-1 OWNER=devops S3_BUCKET=my-artifact-bucket FUNCTION=cognito/userpool-federation deploy
+```
 
 ## Creating a new Custom Resource
 
