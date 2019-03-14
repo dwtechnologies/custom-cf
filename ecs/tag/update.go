@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/dwtechnologies/custom-cf/lib/events"
 )
@@ -35,6 +37,19 @@ func (c *config) updateTags(req *events.Request) (map[string]string, error) {
 			return nil, fmt.Errorf("Failed to tag resource. Error %s", err.Error())
 		}
 	}
+
+	// append CF stack-id
+	c.resourceProperties.Tags = append(c.resourceProperties.Tags, ecs.Tag{
+		Key:   aws.String("cloudformation:stack-id"),
+		Value: aws.String(req.StackID),
+	})
+
+	// append CF stack-name
+	stackName := strings.Split(req.StackID, "/")[1]
+	c.resourceProperties.Tags = append(c.resourceProperties.Tags, ecs.Tag{
+		Key:   aws.String("cloudformation:stack-name"),
+		Value: aws.String(stackName),
+	})
 
 	// add c.resourceProperties.Tags tags
 	_, err := c.svc.TagResourceRequest(
