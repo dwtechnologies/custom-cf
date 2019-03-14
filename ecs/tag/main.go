@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/external"
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/dwtechnologies/custom-cf/lib/events"
@@ -134,21 +133,9 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 		return nil, c.deleteTags(req)
 
 	case req.RequestType == "Create":
-		// append CF stackID
-		c.resourceProperties.Tags = append(c.resourceProperties.Tags, ecs.Tag{
-			Key:   aws.String("cloudformation:stack-id"),
-			Value: aws.String(req.StackID),
-		})
-
 		return c.createTags(req)
 
 	case req.RequestType == "Update":
-		// append CF stackID
-		c.resourceProperties.Tags = append(c.resourceProperties.Tags, ecs.Tag{
-			Key:   aws.String("cloudformation:stack-id"),
-			Value: aws.String(req.StackID),
-		})
-
 		return c.updateTags(req)
 	}
 
