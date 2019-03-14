@@ -15,7 +15,7 @@ import (
 // http client timeout in seconds.
 const (
 	service      = "custom-cf"
-	function     = "tag"
+	function     = "tags"
 	resourceType = "Custom::ECSTag"
 	httpTimeout  = 30
 )
