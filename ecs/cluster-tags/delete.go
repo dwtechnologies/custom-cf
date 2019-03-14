@@ -11,15 +11,16 @@ import (
 // settings specified by req.
 // Returns a map of properties and error.
 func (c *config) deleteTags(req *events.Request) error {
-	tagKeys := []string{}
-	for _, tag := range c.oldResourceProperties.Tags {
-		tagKeys = append(tagKeys, *tag.Key)
+	// get current tags
+	curTagKeys := []string{}
+	for _, tag := range c.resourceProperties.Tags {
+		curTagKeys = append(curTagKeys, *tag.Key)
 	}
 
 	_, err := c.svc.UntagResourceRequest(
 		&ecs.UntagResourceInput{
 			ResourceArn: &c.resourceProperties.ResourceARN,
-			TagKeys:     tagKeys,
+			TagKeys:     curTagKeys,
 		}).Send()
 	if err != nil {
 		return fmt.Errorf("Failed to tag resource. Error %s", err.Error())
