@@ -59,7 +59,7 @@ func handler(ctx context.Context, req *events.Request) error {
 
 	// Set physical ID
 	r := strings.NewReplacer(":", "", "/", "", "-", "")
-	c.physicalID = fmt.Sprintf(r.Replace(strings.Split(c.resourceProperties.ResourceArn, ":")[5]))
+	c.physicalID = fmt.Sprintf(r.Replace(c.resourceProperties.ResourceArn))
 
 	// create, update or delete
 	data, err := c.run(req)
