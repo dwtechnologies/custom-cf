@@ -176,7 +176,7 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 
 	// If Delete is run on the resource.
 	case req.RequestType == "Delete" && client != nil:
-		return nil, c.deleteClient(req)
+		return nil, c.deleteClient(req, client.id)
 
 	// If Update is run on the resource but the Client doesn't exist
 	// create it. If it was a resource that needed replacement a delete event
@@ -223,9 +223,7 @@ func (c *config) getClientByName(poolID string, clientName string) (*Client, err
 	// Loop over list of clients to match our clientName.
 	id := ""
 	for _, client := range list {
-		fmt.Println(*client.ClientName, clientName)
 		if *client.ClientName == clientName {
-			fmt.Println("Settings client id", *client.ClientId)
 			id = *client.ClientId
 		}
 	}

@@ -9,9 +9,9 @@ import (
 
 // deleteClient will delete the UserPool Client specified with clientID.
 // Returns error.
-func (c *config) deleteClient(req *events.Request) error {
+func (c *config) deleteClient(req *events.Request, id string) error {
 	switch {
-	case c.resourceProperties.id == "":
+	case id == "":
 		return fmt.Errorf("Client ID can't be empty")
 
 	case c.resourceProperties.UserPoolID == "":
