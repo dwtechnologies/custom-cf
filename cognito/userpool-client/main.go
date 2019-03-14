@@ -186,7 +186,7 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 
 	// If Update is run on the resource.
 	case req.RequestType == "Update" && client != nil:
-		// return c.updateClient(req, client.id)
+		return c.updateClient(req, client.id)
 
 	// If Create is run on the resource but the Client doesn't exist.
 	case req.RequestType == "Create" && client == nil:
@@ -194,7 +194,7 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 
 	// If Create is run on the resource and the Client exists, adopt and update it.
 	case req.RequestType == "Create" && client != nil:
-		// return c.updateClient(req, client.id)
+		return c.updateClient(req, client.id)
 	}
 
 	return nil, fmt.Errorf("Didn't get RequestType Create, Update or Delete")
