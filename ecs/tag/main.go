@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws/external"
@@ -58,8 +57,7 @@ func handler(ctx context.Context, req *events.Request) error {
 	}
 
 	// Set physical ID
-	r := strings.NewReplacer(":", "", "/", "", "-", "")
-	c.physicalID = fmt.Sprintf(r.Replace(c.resourceProperties.ResourceArn))
+	c.physicalID = fmt.Sprintf("%s-tag", c.resourceProperties.ResourceArn)
 
 	// create, update or delete
 	data, err := c.run(req)
