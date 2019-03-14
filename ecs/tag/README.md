@@ -1,4 +1,9 @@
 # ecs/tags
+Custom cloudformation resource to support
+- AWS::ECS::Cluster.Tags
+- AWS::ECS::TaskDefinition.Tags
+- AWS::ECS::Service.Tags
+
 
 Sample cloudformation resource
 ```yaml
@@ -12,7 +17,7 @@ Resources:
     Type: Custom::ECSTag
     Properties:
       ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::Account}:function:<function-name>
-      ResourceARN: !GetAtt ECScluster.Arn
+      ResourceArn: !GetAtt ECScluster.Arn
       Tags:
 	- Key: Location
 	  Value: Stockholm
