@@ -20,7 +20,7 @@ func (c *config) deleteClient(req *events.Request, id string) error {
 
 	_, err := c.svc.DeleteUserPoolClientRequest(
 		&cognitoidentityprovider.DeleteUserPoolClientInput{
-			ClientId:   &c.resourceProperties.id,
+			ClientId:   &id,
 			UserPoolId: &c.resourceProperties.UserPoolID,
 		}).Send()
 	if err != nil {
