@@ -15,6 +15,7 @@ Please look at the individual `README.md` files in the functions folders.
 - [cognito/userpool-federation](cognito/userpool-federation)
 - [cognito/userpool-uicustomization](cognito/userpool-uicustomization)
 - [cognito/userpool-client](cognito/userpool-client)
+- [cognito/userpool-domain](cognito/userpool-domain)
 
 ### ECS
 
