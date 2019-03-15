@@ -216,7 +216,7 @@ func (c *config) getDomain() (*Domain, error) {
 	}
 
 	// Only set CustomDomainConfig if it's not nil.
-	if resp.DomainDescription.CustomDomainConfig != nil {
+	if resp.DomainDescription.CustomDomainConfig.CertificateArn != nil {
 		domain.CustomDomainConfig = &CustomDomainConfig{CertificateArn: *resp.DomainDescription.CustomDomainConfig.CertificateArn}
 	}
 
