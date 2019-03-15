@@ -65,7 +65,6 @@ Resources:
       - "UserPool"
     Properties:
       Domain: "mydevtestpoolcustomdw"
-      ProviderType: "SAML"
       ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:cognito-userpool-domain-${AWS::Region}-${Environment}"
       UserPoolId: !Ref "UserPool"
 ```
