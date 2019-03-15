@@ -135,7 +135,7 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 		return c.createTags(req)
 
 	case req.RequestType == "Update":
-		// return c.updateTags(req)
+		return c.updateTags(req)
 	}
 
 	return nil, fmt.Errorf("Didn't get RequestType Create, Update or Delete")
