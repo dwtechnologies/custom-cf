@@ -20,6 +20,10 @@ Please look at the individual `README.md` files in the functions folders.
 
 - [ecs/tags](ecs/tags)
 
+### IAM
+- [iam/role-tags](iam/role-tags)
+
+
 ## Requirements
 
 - docker
