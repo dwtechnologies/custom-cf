@@ -36,7 +36,10 @@ func (c *config) createDomain(req *events.Request) (map[string]string, error) {
 		return nil, fmt.Errorf("Failed to create Domain. Error %s", err.Error())
 	}
 
-	return map[string]string{
-		"Domain": *resp.CloudFrontDomain,
-	}, nil
+	data := map[string]string{}
+	if resp.CloudFrontDomain != nil {
+		data["Domain"] = *resp.CloudFrontDomain
+	}
+
+	return data, nil
 }
