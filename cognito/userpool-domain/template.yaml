@@ -60,8 +60,7 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action:
-                  - "cognito-idp:DescribeUserPool"
-                  - "cognito-idp:DescribeUserPoolDomain"
+                  - "cognito-idp:DescribeUserPoolDomains"
                   - "cognito-idp:CreateUserPoolDomain"
                   - "cognito-idp:DeleteUserPoolDomain"
                 Resource: !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/*"
