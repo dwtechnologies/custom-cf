@@ -129,7 +129,7 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 
 	switch {
 	case req.RequestType == "Delete":
-		// return nil, c.deleteTags(req)
+		return nil, c.deleteTags(req)
 
 	case req.RequestType == "Create":
 		return c.createTags(req)
