@@ -153,7 +153,7 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 
 	// If Delete is run on the stack.
 	case req.RequestType == "Delete" && domain != nil:
-		return nil, c.deleteDomain(req)
+		return nil, c.deleteDomain(req, false)
 
 	// If Update is run on the stack but the domain doesn't exist
 	// create it. If it was a resource that needed replacement a delete event

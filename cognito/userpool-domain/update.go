@@ -8,7 +8,7 @@ import (
 // Returns map[string]string and error.
 func (c *config) updateDomain(req *events.Request) (map[string]string, error) {
 	// Due to the API for UserPool Domain being so buggy we need to delete and create.
-	if err := c.deleteDomain(req); err != nil {
+	if err := c.deleteDomain(req, true); err != nil {
 		return nil, err
 	}
 	return c.createDomain(req)

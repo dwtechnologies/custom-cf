@@ -8,20 +8,26 @@ import (
 )
 
 // deleteDomain will delete the domain specified in req.
+// If old is true we delete from oldResourceProperties.
 // Returns error.
-func (c *config) deleteDomain(req *events.Request) error {
+func (c *config) deleteDomain(req *events.Request, old bool) error {
+	props := c.resourceProperties
+	if old {
+		props = c.oldResourceProperties
+	}
+
 	switch {
-	case c.resourceProperties.Domain == "":
+	case props.Domain == "":
 		return fmt.Errorf("No Domain specified")
 
-	case c.resourceProperties.UserPoolID == "":
+	case props.UserPoolID == "":
 		return fmt.Errorf("No UserPoolId specified")
 	}
 
 	_, err := c.svc.DeleteUserPoolDomainRequest(
 		&cognitoidentityprovider.DeleteUserPoolDomainInput{
-			Domain:     &c.resourceProperties.Domain,
-			UserPoolId: &c.resourceProperties.UserPoolID,
+			Domain:     &props.Domain,
+			UserPoolId: &props.UserPoolID,
 		}).Send()
 	if err != nil {
 		return fmt.Errorf("Failed to deleteDomain. Error %s", err.Error())
