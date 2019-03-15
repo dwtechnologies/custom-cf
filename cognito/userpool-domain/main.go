@@ -202,7 +202,7 @@ func (c *config) getDomain() (*Domain, error) {
 	}
 
 	// If domain is nil, the domain doesn't exists.
-	if resp == *resp.DomainDescription.Domain {
+	if resp.DomainDescription.Domain == nil {
 		return nil, nil
 	}
 
