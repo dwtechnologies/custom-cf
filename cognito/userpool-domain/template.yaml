@@ -60,6 +60,7 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action:
+                  - "cloudfront:ListDistributions"
                   - "cognito-idp:Describe*"
                   - "cognito-idp:CreateUserPoolDomain"
                   - "cognito-idp:DeleteUserPoolDomain"

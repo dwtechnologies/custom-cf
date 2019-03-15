@@ -190,6 +190,7 @@ func (c *config) getDomain() (*Domain, error) {
 	resp, err := c.svc.DescribeUserPoolDomainRequest(
 		&cognitoidentityprovider.DescribeUserPoolDomainInput{
 			Domain: &c.resourceProperties.Domain,
+
 		}).Send()
 	if err != nil {
 		// If the domain doesn't exists. Return nil and no error.
@@ -199,6 +200,11 @@ func (c *config) getDomain() (*Domain, error) {
 
 		return nil, err
 	}
+
+	if resp == nil {
+		fmt.Println("its nil")
+	}
+	fmt.Println("resp", *resp)
 
 	// Check that the domain belongs to our UserPoolID.
 	if *resp.DomainDescription.UserPoolId != c.resourceProperties.UserPoolID {
