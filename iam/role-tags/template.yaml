@@ -63,7 +63,7 @@ Resources:
                   - "iam:TagRole"
                   - "iam:UntagRole"
                 Resource:
-                  - !Sub "arn:aws:iam::${AccountId}:role/*"
+                  - !Sub "arn:aws:iam::${AWS::AccountId}:role/*"
 
   LogGroup:
     Type: "AWS::Logs::LogGroup"
