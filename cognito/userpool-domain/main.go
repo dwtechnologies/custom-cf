@@ -201,10 +201,10 @@ func (c *config) getDomain() (*Domain, error) {
 		return nil, err
 	}
 
-	if resp == nil {
-		fmt.Println("its nil")
+	// If domain is nil, the domain doesn't exists.
+	if resp == *resp.DomainDescription.Domain {
+		return nil, nil
 	}
-	fmt.Println("resp", *resp)
 
 	// Check that the domain belongs to our UserPoolID.
 	if *resp.DomainDescription.UserPoolId != c.resourceProperties.UserPoolID {
