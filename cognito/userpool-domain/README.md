@@ -59,7 +59,7 @@ Resources:
       MfaConfiguration: "OFF"
       UserPoolName: "userpool"
 
-  UserPoolFederationADFS:
+  UserPoolDomain:
     Type: "Custom::CognitoUserPoolDomain"
     DependsOn:
       - "UserPool"
