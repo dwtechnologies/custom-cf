@@ -30,7 +30,7 @@ func (c *config) deleteDomain(req *events.Request, old bool) error {
 			UserPoolId: &props.UserPoolID,
 		}).Send()
 	if err != nil {
-		return fmt.Errorf("Failed to deleteDomain. Error %s", err.Error())
+		return fmt.Errorf("Failed to delete Domain. Error %s", err.Error())
 	}
 
 	return nil
