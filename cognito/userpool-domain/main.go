@@ -141,7 +141,7 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 	}
 
 	// Check if the Domain already exists.
-	domain, err := c.getDomain()
+	domain, err := c.getDomain(false)
 	if err != nil {
 		return nil, err
 	}
@@ -159,10 +159,25 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 	// create it. If it was a resource that needed replacement a delete event
 	// will be sent on the old resource once the new one has been created.
 	case req.RequestType == "Update" && domain == nil:
-		return c.createDomain(req)
+		oldDomain, err := c.getDomain(true)
+		if err != nil {
+			return nil, err
+		}
+
+		// If oldDomain is nil, the old domain has already been deleted.
+		// So just create the new one.
+		if oldDomain == nil {
+			return c.createDomain(req)
+		}
+		// Update the domain.
+		return c.updateDomain(req)
 
 	// If Update is run on the stack.
 	case req.RequestType == "Update" && domain != nil:
+		_, err := c.getDomain(true)
+		if err != nil {
+			return nil, err
+		}
 		return c.updateDomain(req)
 
 	// If Create is run on the stack but the domain doesn't exist.
@@ -177,19 +192,25 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 	return nil, fmt.Errorf("Didn't get RequestType Create, Update or Delete")
 }
 
-// getDomain will get the domain with the domain specified i c.resourceProperties.Domain.
+// getDomain will get the domain with the domain specified i c.resourceProperties.Domain
+// or c.oldResourceProperties.Domain depending on if old is true or false.
 // If nil is returned no domain by that name was found.
 // Return *Domain and error.
-func (c *config) getDomain() (*Domain, error) {
+func (c *config) getDomain(old bool) (*Domain, error) {
+	props := c.resourceProperties
+	if old {
+		props = c.oldResourceProperties
+	}
+
 	// Validate input.
 	switch {
-	case c.resourceProperties.Domain == "":
+	case props.Domain == "":
 		return nil, fmt.Errorf("No Domain specified")
 	}
 
 	resp, err := c.svc.DescribeUserPoolDomainRequest(
 		&cognitoidentityprovider.DescribeUserPoolDomainInput{
-			Domain: &c.resourceProperties.Domain,
+			Domain: &props.Domain,
 
 		}).Send()
 	if err != nil {
@@ -211,8 +232,8 @@ func (c *config) getDomain() (*Domain, error) {
 	}
 
 	// Check that the domain belongs to our UserPoolID.
-	if *resp.DomainDescription.UserPoolId != c.resourceProperties.UserPoolID {
-		return nil, fmt.Errorf("Domain name exists but doesn't belong to UserPoolId: %s. But belongs to UserPoolId: %s", c.resourceProperties.UserPoolID, *resp.DomainDescription.UserPoolId)
+	if *resp.DomainDescription.UserPoolId != props.UserPoolID {
+		return nil, fmt.Errorf("Domain name exists but doesn't belong to UserPoolId: %s. But belongs to UserPoolId: %s", props.UserPoolID, *resp.DomainDescription.UserPoolId)
 	}
 
 	domain := &Domain{
