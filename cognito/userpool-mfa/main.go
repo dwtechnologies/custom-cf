@@ -27,29 +27,29 @@ type config struct {
 	log *l.Client
 	svc *cognitoidentityprovider.CognitoIdentityProvider
 
-	physicalID string // The physical ID to use for the resource.
-	resourceProperties    *MFA // The new resource data from the template.
-	oldResourceProperties *MFA // The old resource data, only on updates.
+	physicalID            string // The physical ID to use for the resource.
+	resourceProperties    *MFA   // The new resource data from the template.
+	oldResourceProperties *MFA   // The old resource data, only on updates.
 }
 
 // MFA contains the fields for setting a UserPools MFA settings.
 type MFA struct {
-	MfaConfiguration     string            `json:"MfaConfiguration"`
-	SmsMfaConfiguration *SmsMfaConfiguration `json:"SmsMfaConfiguration,omitempty"`
+	MfaConfiguration              string                         `json:"MfaConfiguration"`
+	SmsMfaConfiguration           *SmsMfaConfiguration           `json:"SmsMfaConfiguration,omitempty"`
 	SoftwareTokenMfaConfiguration *SoftwareTokenMfaConfiguration `json:"SoftwareTokenMfaConfiguration,omitempty"`
-	UserPoolID       string            `json:"UserPoolId"` 
+	UserPoolID                    string                         `json:"UserPoolId"`
 }
 
 // SmsMfaConfiguration contains the SMS MFA configuration.
 type SmsMfaConfiguration struct {
-	SmsAuthenticationMessage string `json:"SmsAuthenticationMessage"`
-	SmsConfiguration *SmsConfiguration `json:"SmsConfiguration"`
+	SmsAuthenticationMessage string            `json:"SmsAuthenticationMessage"`
+	SmsConfiguration         *SmsConfiguration `json:"SmsConfiguration"`
 }
 
 // SmsConfiguration contains the configuration for sending SMS.
 type SmsConfiguration struct {
-	SnsCallerArn string `json:"SnsCallerArn"` 
-		ExternalID string `json:"ExternalId"`
+	SnsCallerArn string `json:"SnsCallerArn"`
+	ExternalID   string `json:"ExternalId"`
 }
 
 // SoftwareTokenMfaConfiguration contains the Software MFA configuration.
@@ -111,21 +111,21 @@ func (c *config) runError(req *events.Request, err error) error {
 // and the cognito aws service.
 // Returns *config and error.
 func createConfig(ctx context.Context, req *events.Request) *config {
-	 return &config{
+	return &config{
 		log: l.Create(ctx, l.Input{
-			"service":            service,
-			"function":           function,
-			"env":                os.Getenv("ENVIRONMENT"),
-			"stackId":            req.StackID,
-			"requestType":        req.RequestType,
-			"requestId":          req.RequestID,
-			"resourceType":       req.ResourceType,
-			"logicalResourceId":  req.LogicalResourceID,
-			"resourceProperties": req.ResourceProperties,
+			"service":               service,
+			"function":              function,
+			"env":                   os.Getenv("ENVIRONMENT"),
+			"stackId":               req.StackID,
+			"requestType":           req.RequestType,
+			"requestId":             req.RequestID,
+			"resourceType":          req.ResourceType,
+			"logicalResourceId":     req.LogicalResourceID,
+			"resourceProperties":    req.ResourceProperties,
 			"oldResourceProperties": req.OldResourceProperties,
 		}),
-		physicalID: "NotAviable",
-		resourceProperties: &MFA{},
+		physicalID:            "NotAviable",
+		resourceProperties:    &MFA{},
 		oldResourceProperties: &MFA{},
 	}
 }
