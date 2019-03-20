@@ -83,13 +83,13 @@ func handler(ctx context.Context, req *events.Request) error {
 	c.physicalID = fmt.Sprintf("%s-mfa", c.resourceProperties.UserPoolID)
 
 	// create, update or delete the userpool federation.
-	data, err := c.run(req)
+	err := c.run(req)
 	if err != nil {
 		return c.runError(req, err)
 	}
 
 	// Send the result to the pre-signed s3 url.
-	if err := req.Send(c.physicalID, data, err); err != nil {
+	if err := req.Send(c.physicalID, nil, err); err != nil {
 		return err
 	}
 	return nil
@@ -146,25 +146,25 @@ func (c *config) createCognitoService() error {
 // If the domain already exists in the user pool it will be adopted into the
 // cf stack. This so that manually created domains don't have to be recreated.
 // Returns map[string]string and error.
-func (c *config) run(req *events.Request) (map[string]string, error) {
+func (c *config) run(req *events.Request) error {
 	// Check for the correct ResourceType
 	if req.ResourceType != resourceType {
-		return nil, fmt.Errorf("Wrong ResourceType in request. Expected %s but got %s", resourceType, req.ResourceType)
+		return fmt.Errorf("Wrong ResourceType in request. Expected %s but got %s", resourceType, req.ResourceType)
 	}
 
 	switch {
 	// If Delete is run on the stack.
 	case req.RequestType == "Delete":
-		return nil, c.deleteMFA(req)
+		return c.setMFA(req, true)
 
 	// If Update is run on the stack.
 	case req.RequestType == "Update":
-		return c.setMFA(req)
+		return c.setMFA(req, false)
 
 	// If Create is run on the stack.
 	case req.RequestType == "Create":
-		return c.setMFA(req)
+		return c.setMFA(req, false)
 	}
 
-	return nil, fmt.Errorf("Didn't get RequestType Create, Update or Delete")
+	return fmt.Errorf("Didn't get RequestType Create, Update or Delete")
 }
