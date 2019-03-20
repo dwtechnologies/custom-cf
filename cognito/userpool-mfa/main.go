@@ -48,13 +48,13 @@ type SmsMfaConfiguration struct {
 
 // SmsConfiguration contains the configuration for sending SMS.
 type SmsConfiguration struct {
-	SnsCallerArn string `json:"SnsCallerArn"`
+	SnsCallerArn string `json:"SnsCallerArn"` 
 		ExternalID string `json:"ExternalId"`
 }
 
 // SoftwareTokenMfaConfiguration contains the Software MFA configuration.
 type SoftwareTokenMfaConfiguration struct {
-	Enabled bool `json:"Enabled"`
+	Enabled string `json:"Enabled"`
 }
 
 func main() {

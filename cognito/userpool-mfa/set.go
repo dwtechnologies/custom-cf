@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/dwtechnologies/custom-cf/lib/events"
@@ -44,8 +45,13 @@ func (c *config) setMFA(req *events.Request, defaults bool) error {
 
 	// Only set SoftwareMfaConfiguration if it's not nil.
 	if props.SoftwareTokenMfaConfiguration != nil {
+		val := false
+		if strings.ToLower(props.SoftwareTokenMfaConfiguration.Enabled) == "true" {
+			val = true
+		}
+
 		input.SoftwareTokenMfaConfiguration = &cognitoidentityprovider.SoftwareTokenMfaConfigType{
-			Enabled: &props.SoftwareTokenMfaConfiguration.Enabled,
+			Enabled: &val,
 		}
 	}
 
