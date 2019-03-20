@@ -35,9 +35,9 @@ type config struct {
 // MFA contains the fields for setting a UserPools MFA settings.
 type MFA struct {
 	MfaConfiguration     string            `json:"MfaConfiguration"`
-	SmsMfaConfiguration *SmsMfaConfiguration `json:"SmsMfaConfiguration"`
-	SoftwareTokenMfaConfiguration *SoftwareTokenMfaConfiguration `json:"SoftwareTokenMfaConfiguration"`
-	UserPoolID       string            `json:"UserPoolId"`
+	SmsMfaConfiguration *SmsMfaConfiguration `json:"SmsMfaConfiguration,omitempty"`
+	SoftwareTokenMfaConfiguration *SoftwareTokenMfaConfiguration `json:"SoftwareTokenMfaConfiguration,omitempty"`
+	UserPoolID       string            `json:"UserPoolId"` 
 }
 
 // SmsMfaConfiguration contains the SMS MFA configuration.
