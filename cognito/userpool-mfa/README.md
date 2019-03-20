@@ -79,7 +79,7 @@ Resources:
     Properties:
       MfaConfiguration: "ON"
       SoftwareTokenMfaConfiguration:
-        - Enabled: true
+        Enabled: true
       ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:cognito-userpool-mfa-${AWS::Region}-${Environment}"
       UserPoolId: !Ref "UserPool"
 ```
