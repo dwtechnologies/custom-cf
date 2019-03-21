@@ -155,7 +155,7 @@ func (c *config) run(req *events.Request) error {
 	switch {
 	// If Delete is run on the stack.
 	case req.RequestType == "Delete":
-		return c.setMFA(req, true)
+		return c.deleteMFA(req)
 
 	// If Update is run on the stack.
 	case req.RequestType == "Update":
