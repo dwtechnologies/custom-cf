@@ -204,13 +204,15 @@ func (c *config) run(req *events.Request) (map[string]string, error) {
 // with poolID. If nil is returned no client by that name was found.
 // Return *Client and error.
 func (c *config) getClientByName(poolID string, clientName string) (*Client, error) {
-	// Validate input.
+	// Just return nil, nil if any of the required fields are missing.
+	// Extra validation will be done in the specific resource creation
+	// functions. This is so that Delete on empty will not fail.
 	switch {
 	case poolID == "":
-		return nil, fmt.Errorf("No UserPool ID specified")
+		return nil, nil
 
 	case clientName == "":
-		return nil, fmt.Errorf("No Client Name specified")
+		return nil, nil
 	}
 
 	// Since we need the Client ID to do any changes we first need to list
