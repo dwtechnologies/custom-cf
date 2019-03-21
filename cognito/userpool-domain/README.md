@@ -23,26 +23,29 @@ See below for the supported Properties.
 
 These are the supported properties for the resource.
 
-| Propertie name | Type | Description | Required |
+| Property name | Type | Description | Required |
 | - | - | - | - |
-| Domain | String | Domain name or part of the domain name to use | Yes |
+| CSS | String | CSS to use for the UI | No |
+| ImageFile | String | Base64 encoded Image | Yes if custom domain is used |
+| ClientId | String | The UserPool Client ID | Yes |
 | UserPoolId | String | The ID of the UserPool to create the Identity Provider in | Yes |
-| CustomDomainConfig | Object | Object with CustomDomainConfig | Yes if custom domain is used |
 | ServiceToken | String | The ARN of the lambda function for this Custom Resource | Yes |
 
-For more details about the custom domain check [https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-assign-domain.html](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-assign-domain.html).
+For more details about the custom domain check [https://docs.aws.amazon.com/cli/latest/reference/cognito-idp/set-ui-customization.html](https://docs.aws.amazon.com/cli/latest/reference/cognito-idp/set-ui-customization.html).
 
-### CustomDomainConfig Properties
+## Supported Attributes
 
-| Propertie name | Type | Description | Required |
-| - | - | - | - |
-| CertificateArn | String | ARN to ACM Certificate | Yes |
+The following attributes can be used in CloudFormations `Fn::GetAtt` function.
+
+- CSSVersion
+- ClientId
+- UserPoolId
 
 ## Example
 
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "Cognito UserPool with SAML federation"
+Description: "Cognito UserPool"
 
 Parameters:
   Environment:
@@ -64,7 +67,7 @@ Resources:
     DependsOn:
       - "UserPool"
     Properties:
-      Domain: "mydevtestpoolcustomdw"
+      Domain: "mydevtestpoolcustom"
       ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:cognito-userpool-domain-${AWS::Region}-${Environment}"
       UserPoolId: !Ref "UserPool"
 ```
