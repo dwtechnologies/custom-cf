@@ -4,7 +4,7 @@ Adds the ability to create, update and delete UserPool MFA Settings through Clou
 
 ## Resource
 
-The name for this custom resource is `Custom::CognitoUserPoolMFA and
+The name for this custom resource is `Custom::CognitoUserPoolMFA` and
 supports all the parameters that you can make through the GUI and cli.
 
 ## Structure
@@ -29,7 +29,7 @@ See below for the supported Properties.
 | SoftwareTokenMfaConfiguration | SoftwareTokenMfaConfiguration | The Software Token configuration if MFA should be via software | No |
 | ServiceToken | String | The ARN of the lambda function for this Custom Resource | Yes |
 
-For more details about the properties check the aws cli docs [https://docs.aws.amazon.com/cli/latest/reference/cognito-idp/create-identity-provider.html](https://docs.aws.amazon.com/cli/latest/reference/cognito-idp/create-identity-provider.html).
+For more details about the properties check the aws cli docs [https://docs.aws.amazon.com/cli/latest/reference/cognito-idp/set-user-pool-mfa-config.html](https://docs.aws.amazon.com/cli/latest/reference/cognito-idp/set-user-pool-mfa-config.html).
 
 ### SmsMfaConfiguration Properties
 
@@ -55,7 +55,7 @@ For more details about the properties check the aws cli docs [https://docs.aws.a
 
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "Cognito UserPool with Client Settings"
+Description: "Cognito UserPool"
 
 Parameters:
   Environment:

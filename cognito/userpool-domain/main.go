@@ -28,16 +28,16 @@ type config struct {
 	log *l.Client
 	svc *cognitoidentityprovider.CognitoIdentityProvider
 
-	physicalID string // The physical ID to use for the resource.
+	physicalID            string  // The physical ID to use for the resource.
 	resourceProperties    *Domain // The new resource data from the template.
 	oldResourceProperties *Domain // The old resource data, only on updates.
 }
 
 // Domain contains the fields for creating a UserPool Domain.
 type Domain struct {
-	Domain     string            `json:"Domain"`
+	Domain             string              `json:"Domain"`
 	CustomDomainConfig *CustomDomainConfig `json:"CustomDomainConfig,omitempty"`
-	UserPoolID       string            `json:"UserPoolId"`
+	UserPoolID         string              `json:"UserPoolId"`
 }
 
 // CustomDomainConfig contains the custom domain configuration.
@@ -99,21 +99,21 @@ func (c *config) runError(req *events.Request, err error) error {
 // and the cognito aws service.
 // Returns *config and error.
 func createConfig(ctx context.Context, req *events.Request) *config {
-	 return &config{
+	return &config{
 		log: l.Create(ctx, l.Input{
-			"service":            service,
-			"function":           function,
-			"env":                os.Getenv("ENVIRONMENT"),
-			"stackId":            req.StackID,
-			"requestType":        req.RequestType,
-			"requestId":          req.RequestID,
-			"resourceType":       req.ResourceType,
-			"logicalResourceId":  req.LogicalResourceID,
-			"resourceProperties": req.ResourceProperties,
+			"service":               service,
+			"function":              function,
+			"env":                   os.Getenv("ENVIRONMENT"),
+			"stackId":               req.StackID,
+			"requestType":           req.RequestType,
+			"requestId":             req.RequestID,
+			"resourceType":          req.ResourceType,
+			"logicalResourceId":     req.LogicalResourceID,
+			"resourceProperties":    req.ResourceProperties,
 			"oldResourceProperties": req.OldResourceProperties,
 		}),
-		physicalID: "NotAviable",
-		resourceProperties: &Domain{},
+		physicalID:            "NotAviable",
+		resourceProperties:    &Domain{},
 		oldResourceProperties: &Domain{},
 	}
 }
@@ -213,7 +213,6 @@ func (c *config) getDomain(old bool) (*Domain, error) {
 	resp, err := c.svc.DescribeUserPoolDomainRequest(
 		&cognitoidentityprovider.DescribeUserPoolDomainInput{
 			Domain: &props.Domain,
-
 		}).Send()
 	if err != nil {
 		// If the domain doesn't exists. Return nil and no error.
@@ -227,7 +226,7 @@ func (c *config) getDomain(old bool) (*Domain, error) {
 	if resp != nil {
 		fmt.Printf("%+v", *resp)
 	}
-	
+
 	// If domain is nil, the domain doesn't exists.
 	if resp.DomainDescription.Domain == nil {
 		return nil, nil

@@ -28,7 +28,7 @@ type config struct {
 	log *l.Client
 	svc *cognitoidentityprovider.CognitoIdentityProvider
 
-	physicalID string // The physical ID to use for the resource.
+	physicalID            string            // The physical ID to use for the resource.
 	resourceProperties    *IdentityProvider // The new resource data from the template.
 	oldResourceProperties *IdentityProvider // The old resource data, only on updates.
 }
@@ -98,7 +98,7 @@ func (c *config) runError(req *events.Request, err error) error {
 // and the cognito aws service.
 // Returns *config and error.
 func createConfig(ctx context.Context, req *events.Request) *config {
-	 return &config{
+	return &config{
 		log: l.Create(ctx, l.Input{
 			"service":            service,
 			"function":           function,
@@ -110,8 +110,8 @@ func createConfig(ctx context.Context, req *events.Request) *config {
 			"logicalResourceId":  req.LogicalResourceID,
 			"resourceProperties": req.ResourceProperties,
 		}),
-		physicalID: "NotAviable",
-		resourceProperties: &IdentityProvider{},
+		physicalID:            "NotAviable",
+		resourceProperties:    &IdentityProvider{},
 		oldResourceProperties: &IdentityProvider{},
 	}
 }
