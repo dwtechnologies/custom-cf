@@ -202,10 +202,12 @@ func (c *config) getDomain(old bool) (*Domain, error) {
 		props = c.oldResourceProperties
 	}
 
-	// Validate input.
+	// Just return nil, nil if any of the required fields are missing.
+	// Extra validation will be done in the specific resource creation
+	// functions. This is so that Delete on empty will not fail.
 	switch {
 	case props.Domain == "":
-		return nil, fmt.Errorf("No Domain specified")
+		return nil, nil
 	}
 
 	resp, err := c.svc.DescribeUserPoolDomainRequest(

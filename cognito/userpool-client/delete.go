@@ -10,12 +10,14 @@ import (
 // deleteClient will delete the UserPool Client specified with clientID.
 // Returns error.
 func (c *config) deleteClient(req *events.Request, id string) error {
+	// If resource creation fails. We will get an empty delete event.
+	// In these cases just return nil.
 	switch {
 	case id == "":
-		return fmt.Errorf("Client ID can't be empty")
+		return nil
 
 	case c.resourceProperties.UserPoolID == "":
-		return fmt.Errorf("UserPool ID can't be empty")
+		return nil
 	}
 
 	_, err := c.svc.DeleteUserPoolClientRequest(

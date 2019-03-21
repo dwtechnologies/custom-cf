@@ -12,6 +12,14 @@ import (
 // the settings in req.
 // Returns error.
 func (c *config) createIdentityProvider(req *events.Request) (map[string]string, error) {
+	switch {
+	case c.resourceProperties.UserPoolID == "":
+		return nil, fmt.Errorf("No UserPool ID specified")
+
+	case c.resourceProperties.ProviderName == "":
+		return nil, fmt.Errorf("No Identity Provider Name specified")
+	}
+
 	resp, err := c.svc.CreateIdentityProviderRequest(
 		&cognitoidentityprovider.CreateIdentityProviderInput{
 			ProviderName:     &c.resourceProperties.ProviderName,
