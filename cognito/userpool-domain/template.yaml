@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "Cognito UserPool Federation CloudFormation Support"
+Description: "Cognito UserPool Domain CloudFormation Support"
 
 Parameters:
   Environment:
