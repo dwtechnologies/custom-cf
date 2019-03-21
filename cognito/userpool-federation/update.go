@@ -10,6 +10,14 @@ import (
 // updateIdentityProvider updates the identity provider specified by IdpIdentifiers in provider.
 // Returns error.
 func (c *config) updateIdentityProvider(req *events.Request, idps []string) (map[string]string, error) {
+	switch {
+	case c.resourceProperties.UserPoolID == "":
+		return nil, fmt.Errorf("No UserPool ID specified")
+
+	case c.resourceProperties.ProviderName == "":
+		return nil, fmt.Errorf("No Identity Provider Name specified")
+	}
+
 	resp, err := c.svc.UpdateIdentityProviderRequest(
 		&cognitoidentityprovider.UpdateIdentityProviderInput{
 			IdpIdentifiers:   idps,
