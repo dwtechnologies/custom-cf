@@ -15,6 +15,7 @@ func (c *config) setMFA(req *events.Request, defaults bool) error {
 	props := c.resourceProperties
 	if defaults {
 		props = &MFA{MfaConfiguration: "OFF"}
+		props.UserPoolID = c.resourceProperties.UserPoolID
 	}
 
 	switch {
