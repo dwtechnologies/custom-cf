@@ -34,21 +34,15 @@ These are the supported properties for the resource.
 
 For more details about the properties check the aws cli docs [https://docs.aws.amazon.com/cli/latest/reference/cognito-idp/create-identity-provider.html](https://docs.aws.amazon.com/cli/latest/reference/cognito-idp/create-identity-provider.html).
 
-### ProviderName
-
-**String** *Required*
-
-Name of the Identity Provider you want to create.
-
 ## Example
 
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "Cognito UserPool with SAML federation"
+Description: "Cognito UserPool"
 
 Parameters:
   Environment:
-    Description: "What environment we deploy to"
+    Description: "What environment"
     Type: "String"
     Default: "dev"
 
