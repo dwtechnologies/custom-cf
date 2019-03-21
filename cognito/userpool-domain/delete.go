@@ -16,12 +16,14 @@ func (c *config) deleteDomain(req *events.Request, old bool) error {
 		props = c.oldResourceProperties
 	}
 
+	// If we get nil that means we are trying to delete something
+	// that is already deleted or never got created.
 	switch {
 	case props.Domain == "":
-		return fmt.Errorf("No Domain specified")
+		return nil
 
 	case props.UserPoolID == "":
-		return fmt.Errorf("No UserPoolId specified")
+		return nil
 	}
 
 	_, err := c.svc.DeleteUserPoolDomainRequest(
