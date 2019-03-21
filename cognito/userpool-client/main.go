@@ -40,7 +40,7 @@ type Client struct {
 	// Standard features.
 	ClientName           string                                          `json:"ClientName"` /* required */
 	UserPoolID           string                                          `json:"UserPoolId"` /* required */
-	GenerateSecret       bool                                            `json:"GenerateSecret"`
+	GenerateSecret       string                                          `json:"GenerateSecret,omitempty"`
 	RefreshTokenValidity int64                                           `json:"RefreshTokenValidity,omitempty"`
 	ReadAttributes       []string                                        `json:"ReadAttributes,omitempty"`
 	WriteAttributes      []string                                        `json:"WriteAttributes,omitempty"`
