@@ -60,10 +60,7 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action:
-                  - "cloudfront:ListDistributions"
-                  - "cognito-idp:DescribeUserPoolDomain"
-                  - "cognito-idp:CreateUserPoolDomain"
-                  - "cognito-idp:DeleteUserPoolDomain"
+                  - "cognito-idp:SetUserPoolMfaConfig"
                 Resource: "*"
 
   LogGroup:
