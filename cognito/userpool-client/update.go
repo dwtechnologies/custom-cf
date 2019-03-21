@@ -24,11 +24,17 @@ func (c *config) updateClient(req *events.Request, id string) (map[string]string
 		return nil, fmt.Errorf("UserPoolId can't be empty")
 	}
 
+	// Set oauthFlows
+	oauthFlows := false
+	if c.resourceProperties.AllowedOAuthFlowsUserPoolClient == "true" {
+		oauthFlows = true
+	}
+
 	input := &cognitoidentityprovider.UpdateUserPoolClientInput{
 		ClientId:                        &id,
 		ClientName:                      &c.resourceProperties.ClientName,
 		UserPoolId:                      &c.resourceProperties.UserPoolID,
-		AllowedOAuthFlowsUserPoolClient: &c.resourceProperties.AllowedOAuthFlowsUserPoolClient,
+		AllowedOAuthFlowsUserPoolClient: &oauthFlows,
 	}
 
 	// Set optional settings.

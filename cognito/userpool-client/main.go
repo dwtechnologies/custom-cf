@@ -48,7 +48,7 @@ type Client struct {
 
 	// Extended features.
 	AllowedOAuthFlows               []cognitoidentityprovider.OAuthFlowType `json:"AllowedOAuthFlows,omitempty"`
-	AllowedOAuthFlowsUserPoolClient bool                                    `json:"AllowedOAuthFlowsUserPoolClient,omitempty"`
+	AllowedOAuthFlowsUserPoolClient string                                  `json:"AllowedOAuthFlowsUserPoolClient,omitempty"`
 	AllowedOAuthScopes              []string                                `json:"AllowedOAuthScopes,omitempty"`
 
 	CallbackURLs       []string `json:"CallbackURLs,omitempty"`

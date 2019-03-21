@@ -21,11 +21,17 @@ func (c *config) createClient(req *events.Request) (map[string]string, error) {
 		return nil, fmt.Errorf("UserPoolId can't be empty")
 	}
 
+	// Set oauthFlows
+	oauthFlows := false
+	if c.resourceProperties.AllowedOAuthFlowsUserPoolClient == "true" {
+		oauthFlows = true
+	}
+
 	input := &cognitoidentityprovider.CreateUserPoolClientInput{
 		ClientName:                      &c.resourceProperties.ClientName,
 		UserPoolId:                      &c.resourceProperties.UserPoolID,
 		GenerateSecret:                  &c.resourceProperties.GenerateSecret,
-		AllowedOAuthFlowsUserPoolClient: &c.resourceProperties.AllowedOAuthFlowsUserPoolClient,
+		AllowedOAuthFlowsUserPoolClient: &oauthFlows,
 	}
 
 	// Set optional settings.
