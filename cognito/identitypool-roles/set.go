@@ -14,7 +14,7 @@ import (
 func (c *config) setRoles(req *events.Request, defaults bool) error {
 	props := c.resourceProperties
 	if defaults {
-		props = &IdentityPoolRoles{IdentityPoolID: c.resourceProperties.IdentityPoolID}
+		props = &IdentityPoolRoles{IdentityPoolID: c.resourceProperties.IdentityPoolID, Roles: map[string]string{}}
 	}
 
 	switch {
@@ -25,11 +25,7 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 	// Create the input for the request.
 	input := &cognitoidentity.SetIdentityPoolRolesInput{
 		IdentityPoolId: &props.IdentityPoolID,
-	}
-
-	// Set the defaults Roles if not empty.
-	if props.Roles != nil {
-		input.Roles = props.Roles
+		Roles:          props.Roles,
 	}
 
 	// Create the map for RoleMappings if it's not nil.
@@ -88,6 +84,8 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 			}
 		}
 	}
+
+	fmt.Printf("%+v", input)
 
 	// Send the request.
 	_, err := c.svc.SetIdentityPoolRolesRequest(input).Send()
