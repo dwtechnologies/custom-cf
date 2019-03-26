@@ -34,15 +34,9 @@ type config struct {
 
 // IdentityPoolRoles contains the fields for setting IdentityPool Roles.
 type IdentityPoolRoles struct {
-	Roles *Roles `json:"Roles,omitempty"`
+	Roles map[string]string `json:"Roles,omitempty"`
 	RoleMappings []RoleMapping `json:"RoleMappings,omitempty"`
 	IdentityPoolID                    string                         `json:"IdentityPoolId"`
-}
-
-// Roles contains the default Roles mappings.
-type Roles struct {
-	Authenticated string            `json:"Authenticated,omitempty"`
-	UnAuthenticated         string `json:"UnAuthenticated,omitempty"`
 }
 
 // RoleMapping contains the role mappings for a identity provider.

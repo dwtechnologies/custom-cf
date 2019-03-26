@@ -14,8 +14,7 @@ import (
 func (c *config) setRoles(req *events.Request, defaults bool) error {
 	props := c.resourceProperties
 	if defaults {
-		props = &IdentityPoolRoles{Roles: &Roles{Authenticated: "", UnAuthenticated: ""}}
-		props.IdentityPoolID = c.resourceProperties.IdentityPoolID
+		props = &IdentityPoolRoles{IdentityPoolID: c.resourceProperties.IdentityPoolID}
 	}
 
 	switch {
@@ -25,11 +24,12 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 
 	// Create the input for the request.
 	input := &cognitoidentity.SetIdentityPoolRolesInput{
-		Roles: map[string]string{
-			"authenticated":   props.Roles.Authenticated,
-			"unauthenticated": props.Roles.UnAuthenticated,
-		},
 		IdentityPoolId: &props.IdentityPoolID,
+	}
+
+	// Set the defaults Roles if not empty.
+	if props.Roles != nil {
+		input.Roles = props.Roles
 	}
 
 	// Create the map for RoleMappings if it's not nil.

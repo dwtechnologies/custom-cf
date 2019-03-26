@@ -28,18 +28,11 @@ See below for the supported Properties.
 
 | Property name | Type | Description | Required |
 | - | - | - | - |
-| Roles | DefaultRoles | Set the default roles ARNs for Authenticated and Unauthenticated access | Yes |
+| Roles | Map of strings | Set the default roles ARNs (keys like authenticated and unauthenticated) | Yes |
 | RoleMappings | List of RoleMapping | The role mapping for a specific Identity Provider | No |
 | ServiceToken | String | The ARN of the lambda function for this Custom Resource | Yes |
 
 For more details about the properties check the aws cli docs [https://docs.aws.amazon.com/cli/latest/reference/cognito-identity/set-identity-pool-roles.html](https://docs.aws.amazon.com/cli/latest/reference/cognito-identity/set-identity-pool-roles.html).
-
-### DefaultRoles Properties
-
-| Property name | Type | Description | Required |
-| - | - | - | - |
-| Authenticated | String | ARN to the default Authenticated role | No |
-| UnAuthenticated | String | ARN to the default UnAuthenticated role | No |
 
 ### RoleMapping Properties
 
