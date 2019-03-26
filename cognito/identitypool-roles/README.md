@@ -1,6 +1,11 @@
 # identitypool-roles
 
-Adds the ability to set Identity Pool Role mappings.
+Adds the ability to set Identity Pool Role mappings based on dynamic Identity Provider names.  
+Since this is not possible in the included Identity Pool Role Attachment of CloudFormation.
+
+Which makes it impossible to do Role Attachment on UserPool Clients created in CloudFormation.
+
+This function will mitigate that limitation.
 
 ## Resource
 
