@@ -82,6 +82,9 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 					RoleARN:   &rule.RoleArn,
 				})
 			}
+
+			// Set the rule to RoleMappings map.
+			input.RoleMappings[mapping.IdentityProvider] = r
 		}
 	}
 
