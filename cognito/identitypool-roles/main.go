@@ -27,32 +27,32 @@ type config struct {
 	log *l.Client
 	svc *cognitoidentity.CognitoIdentity
 
-	physicalID            string // The physical ID to use for the resource.
-	resourceProperties    *IdentityPoolRoles   // The new resource data from the template.
-	oldResourceProperties *IdentityPoolRoles   // The old resource data, only on updates.
+	physicalID            string             // The physical ID to use for the resource.
+	resourceProperties    *IdentityPoolRoles // The new resource data from the template.
+	oldResourceProperties *IdentityPoolRoles // The old resource data, only on updates.
 }
 
 // IdentityPoolRoles contains the fields for setting IdentityPool Roles.
 type IdentityPoolRoles struct {
-	Roles map[string]string `json:"Roles,omitempty"`
-	RoleMappings []RoleMapping `json:"RoleMappings,omitempty"`
-	IdentityPoolID                    string                         `json:"IdentityPoolId"`
+	Roles          map[string]string `json:"Roles,omitempty"`
+	RoleMappings   []RoleMapping     `json:"RoleMappings,omitempty"`
+	IdentityPoolID string            `json:"IdentityPoolId"`
 }
 
 // RoleMapping contains the role mappings for a identity provider.
 type RoleMapping struct {
-	IdentityProvider string `json:"IdentityProvider"`
-	Type string `json:"Type"`
+	IdentityProvider        string `json:"IdentityProvider"`
+	Type                    string `json:"Type"`
 	AmbiguousRoleResolution string `json:"AmbiguousRoleResolution"`
-	Rules []Rule `json:"Rules,omitempty"`
+	Rules                   []Rule `json:"Rules,omitempty"`
 }
 
 // Rule contains the rules if you're using rules based role mapping.
 type Rule struct {
-	Claim string `json:"Claim"`
+	Claim     string `json:"Claim"`
 	MatchType string `json:"MatchType"`
-	Value string `json:"Value"`
-	RoleArn string `json:"RoleArn"`
+	Value     string `json:"Value"`
+	RoleArn   string `json:"RoleArn"`
 }
 
 func main() {
