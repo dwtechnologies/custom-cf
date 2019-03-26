@@ -14,6 +14,7 @@ Check the individual `README.md` files in the subfolders below.
 
 ### Cognito
 
+- [cognito/identitypool-roles](cognito/identitypool-roles)
 - [cognito/userpool-client](cognito/userpool-client)
 - [cognito/userpool-mfa](cognito/userpool-mfa)
 - [cognito/userpool-domain](cognito/userpool-domain)
