@@ -28,7 +28,7 @@ See below for the supported Properties.
 
 | Property name | Type | Description | Required |
 | - | - | - | - |
-| Roles | Map of strings | Set the default roles ARNs. Currently supports keys **authenticated** and **unauthenticated** | No |
+| Roles | Map of strings | Set the default roles ARNs. Currently supports keys **authenticated** and **unauthenticated**. ***Due to Cognito API not being up to spek with RoleMappings this is still required. So Please add either an default authenticated or unauthenticated role. even if you're not using it*** | Yes |
 | RoleMappings | List of RoleMapping | The role mapping for a specific Identity Provider | No |
 | ServiceToken | String | The ARN of the lambda function for this Custom Resource | Yes |
 
