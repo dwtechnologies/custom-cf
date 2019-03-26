@@ -91,6 +91,18 @@ Resources:
       ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:cognito-userpool-client-${AWS::Region}-${Environment}"
       UserPoolId: !Ref "UserPool"
 
+  IdentityPool:
+    Type: "AWS::Cognito::IdentityPool"
+    DependsOn:
+      - "UserPoolClient"
+    Properties:
+      IdentityPoolName: !Sub "identitypool"
+      AllowUnauthenticatedIdentities: false
+      CognitoIdentityProviders:
+        - ClientId: !GetAtt "UserPoolClient.ClientId"
+          ProviderName: !GetAtt "UserPool.ProviderName"
+          ServerSideTokenCheck: false
+
   IdentityPoolRoleMappings:
     Type: "Custom::CognitoIdentityPoolRoles"
     DependsOn:
@@ -111,5 +123,4 @@ Resources:
               Value: "testGroup"
               RoleArn: !GetAtt "MappedRole.Arn"
       ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:cognito-identitypool-roles-${AWS::Region}-${Environment}"
-
 ```
