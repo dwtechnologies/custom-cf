@@ -28,7 +28,7 @@ See below for the supported Properties.
 
 | Property name | Type | Description | Required |
 | - | - | - | - |
-| Roles | Map of strings | Set the default roles ARNs (keys like authenticated and unauthenticated) | Yes |
+| Roles | Map of strings | Set the default roles ARNs. Currently supports keys **authenticated** and **unauthenticated** | No |
 | RoleMappings | List of RoleMapping | The role mapping for a specific Identity Provider | No |
 | ServiceToken | String | The ARN of the lambda function for this Custom Resource | Yes |
 
