@@ -46,8 +46,8 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 		case mapping.Type != "Token" && mapping.Type != "Rules":
 			return fmt.Errorf("Type is not valid in RoleMappings. Valid values are Token or Rules")
 
-		case mapping.AmbiguousRoleResolution == "":
-			return fmt.Errorf("No AmbiguousRoleResolution set in RoleMappings")
+		case mapping.AmbiguousRoleResolution != "AuthenticatedRole" && mapping.AmbiguousRoleResolution != "Deny":
+			return fmt.Errorf("AmbiguousRoleResolution is not valid in RoleMappings. Valid values are AuthenticatedRole or Deny")
 
 		case mapping.Type == "Rules" && mapping.Rules == nil:
 			return fmt.Errorf("No Rules set in RoleMappings and Type is Rules")
