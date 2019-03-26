@@ -61,7 +61,6 @@ Resources:
               - Effect: "Allow"
                 Action:
                   - "cognito-identity:SetIdentityPoolRoles"
-                  - "iam:PassRole"
                 Resource: "*"
 
   LogGroup:
