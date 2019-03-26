@@ -88,8 +88,6 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 		}
 	}
 
-	fmt.Printf("%+v", input)
-
 	// Send the request.
 	_, err := c.svc.SetIdentityPoolRolesRequest(input).Send()
 	if err != nil {
