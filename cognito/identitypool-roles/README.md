@@ -51,6 +51,8 @@ Up to 25 rules can be specified per Identity Provider.
 
 The rules for mapping roles if type is **Rules**.
 
+| Property name | Type | Description | Required |
+| - | - | - | - |
 | Claim | String | The Claim to match | Yes |
 | MatchType | String | Either **Equals**, **Contains**, **StarsWith** or **NotEqual** | No |
 | Value | String | The value to match against the claim | Yes |
