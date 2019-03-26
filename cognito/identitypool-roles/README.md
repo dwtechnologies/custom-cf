@@ -58,6 +58,9 @@ The rules for mapping roles if type is **Rules**.
 
 ## Example
 
+The following example will add an default authenticated role called `AuthenticatedRole` and map against a role called `MappedRole`
+if claim `testGroup` is `testGroup`.
+
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
 Description: "Cognito UserPool"
@@ -69,5 +72,44 @@ Parameters:
     Default: "dev"
 
 Resources:
-  ### Update with example.
+  UserPool:
+    Type: "AWS::Cognito::UserPool"
+    Properties:
+      AliasAttributes:
+        - "email"
+      MfaConfiguration: "OFF"
+      UserPoolName: "userpool"
+
+  UserPoolClient:
+    Type: "Custom::CognitoUserPoolClient"
+    DependsOn:
+      - "UserPool"
+    Properties:
+      ClientName: "testclient"
+      SupportedIdentityProviders:
+        - "COGNITO"
+      ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:cognito-userpool-client-${AWS::Region}-${Environment}"
+      UserPoolId: !Ref "UserPool"
+
+  IdentityPoolRoleMappings:
+    Type: "Custom::CognitoIdentityPoolRoles"
+    DependsOn:
+      - "IdentityPool"
+      - "AuthenticatedRole"
+      - "MappedRole"
+    Properties:
+      IdentityPoolId: !Ref "IdentityPool"
+      Roles:
+        authenticated: !GetAtt "AuthenticatedRole.Arn"
+      RoleMappings:
+        - IdentityProvider: !Sub "cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}:${UserPoolClient.ClientId}"
+          Type: "Rules"
+          AmbiguousRoleResolution: "Deny"
+          Rules:
+            - Claim: "group"
+              MatchType: "Equals"
+              Value: "testGroup"
+              RoleArn: !GetAtt "MappedRole.Arn"
+      ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:cognito-identitypool-roles-${AWS::Region}-${Environment}"
+
 ```
