@@ -60,7 +60,7 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action:
-                  - "cognito-idp:SetIdentityPoolRoles"
+                  - "cognito-identity:SetIdentityPoolRoles"
                 Resource: "*"
 
   LogGroup:
