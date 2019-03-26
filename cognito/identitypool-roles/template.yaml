@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "Cognito UserPool MFA CloudFormation Support"
+Description: "Cognito IdentityPool Role Mappings CloudFormation Support"
 
 Parameters:
   Environment:
