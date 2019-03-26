@@ -14,7 +14,12 @@ import (
 func (c *config) setRoles(req *events.Request, defaults bool) error {
 	props := c.resourceProperties
 	if defaults {
-		props = &IdentityPoolRoles{IdentityPoolID: c.resourceProperties.IdentityPoolID, Roles: map[string]string{}}
+		props = &IdentityPoolRoles{IdentityPoolID: c.resourceProperties.IdentityPoolID}
+	}
+
+	// Don't allow Roles to be nil. Set it as an empty map instead.
+	if props.Roles == nil {
+		props.Roles = map[string]string{}
 	}
 
 	switch {
