@@ -53,7 +53,7 @@ AWS_PROFILE=my-profile AWS_REGION=region OWNER=TeamName S3_BUCKET=my-artifact-bu
 Example
 
 ```bash
-AWS_PROFILE=default AWS_REGION=eu-west-1 OWNER=devops S3_BUCKET=my-artifact-bucket FUNCTION=cognito/userpool-federation deploy
+AWS_PROFILE=default AWS_REGION=eu-west-1 OWNER=devops S3_BUCKET=my-artifact-bucket FUNCTION=cognito/userpool-federation make deploy
 ```
 
 ## Creating a new Custom Resource
