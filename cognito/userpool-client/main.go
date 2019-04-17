@@ -41,7 +41,7 @@ type Client struct {
 	ClientName           string                                          `json:"ClientName"` /* required */
 	UserPoolID           string                                          `json:"UserPoolId"` /* required */
 	GenerateSecret       string                                          `json:"GenerateSecret,omitempty"`
-	RefreshTokenValidity int64                                           `json:"RefreshTokenValidity,omitempty"`
+	RefreshTokenValidity string                                          `json:"RefreshTokenValidity,omitempty"`
 	ReadAttributes       []string                                        `json:"ReadAttributes,omitempty"`
 	WriteAttributes      []string                                        `json:"WriteAttributes,omitempty"`
 	ExplicitAuthFlows    []cognitoidentityprovider.ExplicitAuthFlowsType `json:"ExplicitAuthFlows,omitempty"`

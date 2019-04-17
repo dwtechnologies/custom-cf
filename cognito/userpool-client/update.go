@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/dwtechnologies/custom-cf/lib/events"
@@ -38,8 +39,12 @@ func (c *config) updateClient(req *events.Request, id string) (map[string]string
 	}
 
 	// Set optional settings.
-	if c.resourceProperties.RefreshTokenValidity != 0 {
-		input.RefreshTokenValidity = &c.resourceProperties.RefreshTokenValidity
+	if c.resourceProperties.RefreshTokenValidity != "" {
+		n, err := strconv.ParseInt(c.resourceProperties.RefreshTokenValidity, 10, 64)
+		if err != nil {
+			return nil, fmt.Errorf("RefreshTokenValidity invalid")
+		}
+		input.RefreshTokenValidity = &n
 	}
 	if c.resourceProperties.ReadAttributes != nil {
 		input.ReadAttributes = c.resourceProperties.ReadAttributes
