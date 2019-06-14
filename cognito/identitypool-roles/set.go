@@ -66,8 +66,8 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 			r.RulesConfiguration = &cognitoidentity.RulesConfigurationType{Rules: []cognitoidentity.MappingRule{}}
 
 			// Validate rules.
-			for _, rule := range mapping.RulesConfiguration.Rules {
-				log.Printf("rule: %+v", rule)
+			for i, _ := range mapping.RulesConfiguration.Rules {
+				rule := mapping.RulesConfiguration.Rules[i]
 
 				switch {
 				case rule.Claim == "":
