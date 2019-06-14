@@ -41,10 +41,14 @@ type IdentityPoolRoles struct {
 
 // RoleMapping contains the role mappings for a identity provider.
 type RoleMapping struct {
-	IdentityProvider        string `json:"IdentityProvider"`
-	Type                    string `json:"Type"`
-	AmbiguousRoleResolution string `json:"AmbiguousRoleResolution"`
-	Rules                   []Rule `json:"Rules,omitempty"`
+	IdentityProvider        string             `json:"IdentityProvider"`
+	Type                    string             `json:"Type"`
+	AmbiguousRoleResolution string             `json:"AmbiguousRoleResolution"`
+	RulesConfiguration      RulesConfiguration `json:"RulesConfiguration"`
+}
+
+type RulesConfiguration struct {
+	Rules []Rule `json:"Rules,omitempty"`
 }
 
 // Rule contains the rules if you're using rules based role mapping.
