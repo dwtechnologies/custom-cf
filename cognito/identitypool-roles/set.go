@@ -89,6 +89,8 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 					Value:     &rule.Value,
 					RoleARN:   &rule.RoleArn,
 				})
+
+				log.Printf("mapping rules: %+v", r.RulesConfiguration.Rules)
 			}
 
 			// Set the rule to RoleMappings map.
