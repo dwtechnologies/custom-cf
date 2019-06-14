@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentity"
 
@@ -50,7 +51,7 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 		case mapping.AmbiguousRoleResolution != "AuthenticatedRole" && mapping.AmbiguousRoleResolution != "Deny":
 			return fmt.Errorf("AmbiguousRoleResolution is not valid in RoleMappings. Valid values are AuthenticatedRole or Deny")
 
-		case mapping.Type == "Rules" && mapping.Rules == nil:
+		case mapping.Type == "Rules" && mapping.RulesConfiguration.Rules == nil:
 			return fmt.Errorf("No Rules set in RoleMappings and Type is Rules")
 		}
 
@@ -60,12 +61,12 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 		}
 
 		// Set the Rules Config struct and map if it's not nil.
-		if mapping.Rules != nil {
+		if mapping.RulesConfiguration.Rules != nil {
 			r := input.RoleMappings[mapping.IdentityProvider]
 			r.RulesConfiguration = &cognitoidentity.RulesConfigurationType{Rules: []cognitoidentity.MappingRule{}}
 
 			// Validate rules.
-			for _, rule := range mapping.Rules {
+			for _, rule := range mapping.RulesConfiguration.Rules {
 				switch {
 				case rule.Claim == "":
 					return fmt.Errorf("No Claim set in Rules")
@@ -94,6 +95,7 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 	}
 
 	// Send the request.
+	log.Printf("%+v", input)
 	_, err := c.svc.SetIdentityPoolRolesRequest(input).Send()
 	if err != nil {
 		return fmt.Errorf("Failed to set Identity Pool Roles. Error %s", err.Error())
