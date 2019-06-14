@@ -119,10 +119,11 @@ Resources:
         - IdentityProvider: !Sub "cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}:${UserPoolClient.ClientId}"
           Type: "Rules"
           AmbiguousRoleResolution: "Deny"
-          Rules:
-            - Claim: "group"
-              MatchType: "Equals"
-              Value: "testGroup"
-              RoleArn: !GetAtt "MappedRole.Arn"
+          RulesConfiguration:
+            Rules:
+              - Claim: "group"
+                MatchType: "Equals"
+                Value: "testGroup"
+                RoleArn: !GetAtt "MappedRole.Arn"
       ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:cognito-identitypool-roles-${AWS::Region}-${Environment}"
 ```
