@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentity"
 
@@ -89,8 +88,6 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 					Value:     &rule.Value,
 					RoleARN:   &rule.RoleArn,
 				})
-
-				log.Printf("mapping rules: %+v", r.RulesConfiguration.Rules)
 			}
 
 			// Set the rule to RoleMappings map.
@@ -99,7 +96,6 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 	}
 
 	// Send the request.
-	log.Printf("input: %+v", input)
 	_, err := c.svc.SetIdentityPoolRolesRequest(input).Send()
 	if err != nil {
 		return fmt.Errorf("Failed to set Identity Pool Roles. Error %s", err.Error())
