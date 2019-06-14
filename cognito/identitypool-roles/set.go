@@ -67,6 +67,8 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 
 			// Validate rules.
 			for _, rule := range mapping.RulesConfiguration.Rules {
+				log.Printf("rule: %+v", rule)
+
 				switch {
 				case rule.Claim == "":
 					return fmt.Errorf("No Claim set in Rules")
@@ -95,7 +97,7 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 	}
 
 	// Send the request.
-	log.Printf("%+v", input)
+	log.Printf("input: %+v", input)
 	_, err := c.svc.SetIdentityPoolRolesRequest(input).Send()
 	if err != nil {
 		return fmt.Errorf("Failed to set Identity Pool Roles. Error %s", err.Error())
