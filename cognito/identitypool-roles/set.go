@@ -50,7 +50,7 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 		case mapping.AmbiguousRoleResolution != "AuthenticatedRole" && mapping.AmbiguousRoleResolution != "Deny":
 			return fmt.Errorf("AmbiguousRoleResolution is not valid in RoleMappings. Valid values are AuthenticatedRole or Deny")
 
-		case mapping.Type == "Rules" && mapping.Rules == nil:
+		case mapping.Type == "Rules" && mapping.RulesConfiguration.Rules == nil:
 			return fmt.Errorf("No Rules set in RoleMappings and Type is Rules")
 		}
 
@@ -60,12 +60,14 @@ func (c *config) setRoles(req *events.Request, defaults bool) error {
 		}
 
 		// Set the Rules Config struct and map if it's not nil.
-		if mapping.Rules != nil {
+		if mapping.RulesConfiguration.Rules != nil {
 			r := input.RoleMappings[mapping.IdentityProvider]
 			r.RulesConfiguration = &cognitoidentity.RulesConfigurationType{Rules: []cognitoidentity.MappingRule{}}
 
 			// Validate rules.
-			for _, rule := range mapping.Rules {
+			for i, _ := range mapping.RulesConfiguration.Rules {
+				rule := mapping.RulesConfiguration.Rules[i]
+
 				switch {
 				case rule.Claim == "":
 					return fmt.Errorf("No Claim set in Rules")
