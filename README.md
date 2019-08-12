@@ -21,10 +21,6 @@ Check the individual `README.md` files in the subfolders below.
 - [cognito/userpool-uicustomization](cognito/userpool-uicustomization)
 - [cognito/userpool-federation](cognito/userpool-federation)
 
-### ECS
-
-- [ecs/tags](ecs/tags)
-
 ### IAM
 
 - [iam/role-tags](iam/role-tags)
